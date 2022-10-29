@@ -183,12 +183,12 @@ export default function DiscoverScreen() {
     <SafeAreaView style={styles.container}>
       {/* CONTENT */}
       <View style={styles.content}>
-        {/* User Playlist */}
+        {/* Page */}
         <View style={{marginVertical: '3%'}}>
           <Text style={styles.textBold}>Discover</Text>
         </View>
 
-        {/* Official Playlist */}
+        {/* Podcast */}
         <View style={styles.podcasts}>
           <View style={{flexDirection: 'row'}}>
             <Text style={styles.text}>Podcast's</Text>
