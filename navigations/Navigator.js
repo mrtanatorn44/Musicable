@@ -15,20 +15,23 @@ export const Navigator = () => {
     <NavigationContainer>
       <Stack.Navigator
         screenOptions={{
-          headerShown: false
+          headerShown: false,
+          presentation: 'modal',
+          animationTypeForReplace: 'push',
+          animation:'none'
         }}
       >
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen}
+        />
         <Stack.Screen 
           name="DiscoverScreen" 
           component={DiscoverScreen} 
         />
         <Stack.Screen 
-          name="HomeScreen" 
-          component={HomeScreen} 
-        />
-        <Stack.Screen 
           name="LibraryScreen" 
-          component={LibraryScreen} 
+          component={LibraryScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

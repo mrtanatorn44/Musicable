@@ -212,7 +212,7 @@ const SuggestedArtistsData = [
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
 export default function MainScreen() {
   const navigation = useNavigation();
-  const page = 'discover'
+  const page = 'home'
   const [myText, setMyText] = useState('');
 
   const renderUserPlaylist = ({ item }) => (
@@ -324,16 +324,17 @@ export default function MainScreen() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('HomeScreen')}>
           <Octicons name="home" size={32} color={page=='home' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('DiscoverScreen')}>
           <Octicons name="search" size={32} color={page=='discover' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('LibraryScreen')}>
           <Octicons name="stack" size={32} color={page=='library' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
       </View>
+
     </SafeAreaView>
   );
 }

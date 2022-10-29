@@ -220,13 +220,13 @@ export default function DiscoverScreen() {
 
       {/* Footer */}
       <View style={styles.footer}>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('HomeScreen')}>
           <Octicons name="home" size={32} color={page=='home' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('DiscoverScreen')}>
           <Octicons name="search" size={32} color={page=='discover' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
-        <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
+        <TouchableOpacity style={{flex: 1, alignItems: 'center'}} onPress={() => navigation.navigate('LibraryScreen')}>
           <Octicons name="stack" size={32} color={page=='library' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
       </View>
