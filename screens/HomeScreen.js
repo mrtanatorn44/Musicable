@@ -212,6 +212,7 @@ const SuggestedArtistsData = [
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
 export default function MainScreen() {
   const navigation = useNavigation();
+  const page = 'discover'
   const [myText, setMyText] = useState('');
 
   const renderUserPlaylist = ({ item }) => (
@@ -324,13 +325,13 @@ export default function MainScreen() {
       {/* Footer */}
       <View style={styles.footer}>
         <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
-          <Octicons name="home" size={32} color="#1ED760" />
+          <Octicons name="home" size={32} color={page=='home' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
         <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
-          <Octicons name="search" size={32} color="#fff" />
+          <Octicons name="search" size={32} color={page=='discover' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
         <TouchableOpacity style={{flex: 1, alignItems: 'center'}}>
-          <Octicons name="stack" size={32} color="#fff" />
+          <Octicons name="stack" size={32} color={page=='library' ? "#1ED760" : "#fff"} />
         </TouchableOpacity>
       </View>
     </SafeAreaView>
