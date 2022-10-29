@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, StyleSheet, Text, View } from "react-native";
 
-import MainScreen from '../screens/MainScreen'
+import HomeScreen from '../screens/HomeScreen'
 import DiscoverScreen from '../screens/DiscoverScreen'
 import LibraryScreen from '../screens/LibraryScreen'
 
@@ -19,12 +19,12 @@ export const Navigator = () => {
         }}
       >
         <Stack.Screen 
-          name="MainScreen" 
-          component={MainScreen} 
-        />
-        <Stack.Screen 
           name="DiscoverScreen" 
           component={DiscoverScreen} 
+        />
+        <Stack.Screen 
+          name="HomeScreen" 
+          component={HomeScreen} 
         />
         <Stack.Screen 
           name="LibraryScreen" 

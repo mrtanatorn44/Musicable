@@ -280,10 +280,8 @@ export default function MainScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* CONTENT */}
       <View style={styles.content}>
-      
-        {/* <Text style={styles.text}>{myText}</Text> */}
-
         {/* User Playlist */}
         <View style={styles.userPlaylist}>
           <Text style={styles.textBold}>{greeting()}</Text>
