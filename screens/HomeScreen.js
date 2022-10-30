@@ -4,6 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
 
+import { Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window');
+
 const userPlaylistData = [
   {
     name: 'Playlist1',
@@ -226,7 +229,7 @@ export default function MainScreen() {
           source={{ uri: item[0].image}}
         />
         <View style={{width: '60%', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.text}>{item[0].name}</Text>
+          <Text style={styles.text} numberOfLines={1}>{item[0].name}</Text>
         </View>
       </TouchableOpacity> 
       <TouchableOpacity 
@@ -238,7 +241,7 @@ export default function MainScreen() {
           source={{ uri: item[1].image}}
         />
         <View style={{width: '60%', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={styles.text}>{item[1].name}</Text>
+          <Text style={styles.text} numberOfLines={1}>{item[1].name}</Text>
         </View>
       </TouchableOpacity> 
     </View>
@@ -256,7 +259,7 @@ export default function MainScreen() {
         />
         <View style={{width: '90%', height: '30%'}}>
           <Text style={styles.text} numberOfLines={1} >{item.name}</Text>
-          <Text style={[styles.text, {fontSize: 18, color: 'gray'}]} numberOfLines={2}>Artist, Artist, Artist, Artist, Artist, Artist, Artist</Text>
+          <Text style={[styles.text, {fontSize: 12, color: 'gray'}]} numberOfLines={2}>Artist, Artist, Artist, Artist, Artist, Artist, Artist</Text>
         </View>
       </TouchableOpacity> 
     </View>
@@ -362,12 +365,12 @@ const styles = StyleSheet.create({
 
   textBold: {
     color: 'white',
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold'
   },
   text: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 18,
   },
 
   userPlaylist: {
@@ -381,7 +384,7 @@ const styles = StyleSheet.create({
   userPlaylistItem: {
     flexDirection: 'row',
     backgroundColor: '#585858',
-    width: 250,
+    width: width/2.5,
     height: '45%',
     margin: 5,
   },
@@ -400,7 +403,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    width: 200,
+    width: width/3,
     height: '100%',
     margin: 5,
   },
@@ -419,7 +422,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    width: 200,
+    width: width/3,
     height: '100%',
     margin: 5,
   },

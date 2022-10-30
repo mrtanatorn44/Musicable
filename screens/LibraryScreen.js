@@ -4,6 +4,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons, MaterialIcons } from '@expo/vector-icons'; 
 
+import { Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window');
+
 const userLibraryData = [
   {
     name: 'Playlist #1',
@@ -124,7 +127,7 @@ export default function LibraryScreen() {
   const page = 'library'
   const [myText, setMyText] = useState('');
 
-  const renderBrowse = ({ item }) => (
+  const renderLibrary = ({ item }) => (
     <View>
       <TouchableOpacity 
         style={styles.libraryItem} 
@@ -197,7 +200,8 @@ export default function LibraryScreen() {
         {/* Page */}
         <View style={{marginVertical: '3%', flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={styles.textBold}>Your Library</Text>
-          <TouchableOpacity style={{width: '15%', justifyContent: 'center'}}>
+          <TouchableOpacity style={{width: '15%', justifyContent: 'center'}} 
+            onPress={() => navigation.navigate('SettingScreen', {fromPage: 'LibraryScreen'})}>
             <Octicons style={{textAlign: 'center'}} name="gear" size={32} color="white" />
           </TouchableOpacity>
         </View>
@@ -208,7 +212,7 @@ export default function LibraryScreen() {
             horizontal={true} 
             style={styles.libraryScroll}
             data={userLibraryRowData}
-            renderItem={renderBrowse}
+            renderItem={renderLibrary}
             // keyExtractor={(playlist) => playlist.id}
           />
         </View>
@@ -273,12 +277,12 @@ const styles = StyleSheet.create({
 
   textBold: {
     color: 'white',
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold'
   },
   text: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 18,
   },
 
   library: {
@@ -286,7 +290,7 @@ const styles = StyleSheet.create({
   },
   libraryScroll: {
     // backgroundColor: 'green',
-    height: '60%',
+    height: height/2.2,
     width: '100%'
   },
   libraryItem: {
@@ -295,8 +299,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    width: 200,
-    height: '48%',
+    width: width/3,
+    height: height/4.5,
     margin: 5,
   },
 

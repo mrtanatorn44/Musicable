@@ -5,6 +5,9 @@ import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
 
+import { Dimensions } from 'react-native';
+const {width, height} = Dimensions.get('window');
+
 const podcastsData = [
   {
     name: 'Podcast1',
@@ -259,12 +262,12 @@ const styles = StyleSheet.create({
 
   textBold: {
     color: 'white',
-    fontSize: 32,
+    fontSize: 24,
     fontWeight: 'bold'
   },
   text: {
     color: 'white',
-    fontSize: 24,
+    fontSize: 18,
   },
 
   podcasts: {
@@ -281,7 +284,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
     alignItems: 'center',
     borderRadius: 20,
-    width: 200,
+    width: width/3,
     height: '100%',
     margin: 5,
   },
@@ -297,7 +300,7 @@ const styles = StyleSheet.create({
   browseItem: {
     flexDirection: 'row',
     backgroundColor: '#585858',
-    width: 250,
+    width: width/2.5,
     height: '30%',
     margin: 5,
     borderRadius: 10,
