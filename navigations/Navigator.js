@@ -6,6 +6,7 @@ import { Image, StyleSheet, Text, View } from "react-native";
 import HomeScreen from '../screens/HomeScreen'
 import DiscoverScreen from '../screens/DiscoverScreen'
 import LibraryScreen from '../screens/LibraryScreen'
+import SettingScreen from '../screens/SettingScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -33,6 +34,12 @@ export const Navigator = () => {
           name="LibraryScreen" 
           component={LibraryScreen}
         />
+
+        <Stack.Screen 
+          name="SettingScreen" 
+          component={SettingScreen}
+        />
+
       </Stack.Navigator>
     </NavigationContainer>
   );
