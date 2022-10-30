@@ -187,8 +187,12 @@ export default function DiscoverScreen() {
       {/* CONTENT */}
       <View style={styles.content}>
         {/* Page */}
-        <View style={{marginVertical: '3%'}}>
+        <View style={{marginVertical: '3%', flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={styles.textBold}>Discover</Text>
+          <TouchableOpacity style={{width: '15%', justifyContent: 'center'}} 
+            onPress={() => navigation.navigate('SettingScreen', {fromPage: 'DiscoverScreen'})}>
+            <Octicons style={{textAlign: 'center'}} name="gear" size={32} color="white" />
+          </TouchableOpacity>
         </View>
 
         {/* Podcast */}
