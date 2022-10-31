@@ -1,7 +1,12 @@
 import { NavigationContainer, useNavigationContainerRef  } from '@react-navigation/native';
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {firebase} from "../firestore/Connect"
+
+import SplashScreen from "../screens/SplashScreen";
+import LoginScreen from "../screens/LoginScreen";
+import RegisterScreen from "../screens/RegisterScreen";
 
 import HomeScreen from '../screens/HomeScreen'
 import DiscoverScreen from '../screens/DiscoverScreen'
@@ -14,12 +19,36 @@ export const Navigator = () => {
   const [showModal, setShowModal] = useState(false)
   const navigationRef = useNavigationContainerRef();
 
+  const [initializing, setInitializing] = useState(true);
+  const [user, setUser] = useState();
+
+  function onAuthStateChanged(user) {
+    setUser(user);
+    if (initializing) setInitializing(false);
+  }
+
+  useEffect(() => {
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
+  }, []);
+
+  if (initializing) return null;
+
+  if (!user) {
+    return (
+      <NavigationContainer ref={navigationRef}>
+        <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'modal', animationTypeForReplace: 'push', animation:'none' }}>
+          <Stack.Screen name="SplashScreen"   component={SplashScreen} />
+          <Stack.Screen name="LoginScreen"    component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  }
+
   return (
     <NavigationContainer ref={navigationRef}>
-      <Modal
-        transparent={true}
-        visible={showModal}
-      > 
+      <Modal transparent={true} visible={showModal} > 
         <View style={{position: 'absolute', width: '80%', height: '80%', start: '10%', top: '10%'}}>
           <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'white', marginBottom: 1}}
             onPress={() => navigationRef.navigate('HomeScreen')}>
@@ -44,39 +73,18 @@ export const Navigator = () => {
         </View>
       </Modal>
 
-      <TouchableOpacity 
-        style={{position: 'absolute', justifyContent: 'center', zIndex: 1,backgroundColor: 'red', width: 50, height: 50, top: '80%', end: 0, borderRadius: 100}}
-        onPress={() => setShowModal(true)}>
+      <TouchableOpacity style={{position: 'absolute', justifyContent: 'center', zIndex: 1,backgroundColor: 'red', width: 50, height: 50, top: '80%', end: 0, borderRadius: 100}} onPress={() => setShowModal(true)}>
         <Text style={{textAlign: 'center', color: 'white'}}>admin</Text>
       </TouchableOpacity>
       
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-          presentation: 'modal',
-          animationTypeForReplace: 'push',
-          animation:'none'
-        }}
-      >
-        <Stack.Screen 
-          name="HomeScreen" 
-          component={HomeScreen}
-        />
-        <Stack.Screen 
-          name="DiscoverScreen" 
-          component={DiscoverScreen} 
-        />
-        <Stack.Screen 
-          name="LibraryScreen" 
-          component={LibraryScreen}
-        />
-
-        <Stack.Screen 
-          name="SettingScreen" 
-          component={SettingScreen}
-        />
-
+      <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'modal', animationTypeForReplace: 'push', animation:'none' }}>
+        <Stack.Screen name="HomeScreen"     component={HomeScreen} />
+        <Stack.Screen name="DiscoverScreen" component={DiscoverScreen} />
+        <Stack.Screen name="LibraryScreen"  component={LibraryScreen} />
+        <Stack.Screen name="SettingScreen"  component={SettingScreen} />
       </Stack.Navigator>
+
     </NavigationContainer>
   );
+
 };
