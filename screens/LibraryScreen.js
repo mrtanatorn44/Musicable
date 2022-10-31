@@ -155,7 +155,7 @@ export default function LibraryScreen() {
             />
           </View>
         </View>
-        <View style={{width: '90%', height: '20%'}}>
+        <View style={{width: '90%', height: '20%', justifyContent: 'center'}}>
           <Text style={styles.text} numberOfLines={1} >{item[0].name}</Text>
         </View>
       </TouchableOpacity>
@@ -186,7 +186,7 @@ export default function LibraryScreen() {
             />
           </View>
         </View>
-        <View style={{width: '90%', height: '20%'}}>
+        <View style={{width: '90%', height: '20%', justifyContent: 'center'}}>
           <Text style={styles.text} numberOfLines={1} >{item[1].name}</Text>
         </View>
       </TouchableOpacity> 
