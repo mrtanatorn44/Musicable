@@ -3,6 +3,7 @@ import { StyleSheet, Text, View , Image, ScrollView, FlatList, TouchableOpacity}
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons, MaterialIcons } from '@expo/vector-icons'; 
+import { firebase } from "../firestore/Connect";
 
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
 export default function MainScreen({route}) {
@@ -36,20 +37,20 @@ export default function MainScreen({route}) {
             <Text style={[styles.text, {width: '70%'}]}>Downloaded</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}
+            onPress={() => { firebase.auth().signOut(); }}
+          >
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="logout" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Logout</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
           </TouchableOpacity>
         </View>
-
-
-
       </View>
 
     </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
