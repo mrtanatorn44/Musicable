@@ -3,6 +3,7 @@ import { StyleSheet, Text, View , Image, ScrollView, FlatList, TouchableOpacity}
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
+import {firebase} from "../firestore/Connect"
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
@@ -217,6 +218,22 @@ export default function MainScreen() {
   const navigation = useNavigation();
   const page = 'home'
   const [myText, setMyText] = useState('');
+
+  const [username, setUsername] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          setUsername(snapshot.data());
+        } else {
+          console.log("Username does not exists");
+        }
+      });
+  }, []);
 
   const renderUserPlaylist = ({ item }) => (
     <View>
