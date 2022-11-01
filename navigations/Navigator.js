@@ -4,14 +4,18 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Image, Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import {firebase} from "../firestore/Connect"
 
-import SplashScreen from "../screens/SplashScreen";
-import LoginScreen from "../screens/LoginScreen";
+import SplashScreen   from "../screens/SplashScreen";
+import LoginScreen    from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 
-import HomeScreen from '../screens/HomeScreen'
+import HomeScreen     from '../screens/HomeScreen'
 import DiscoverScreen from '../screens/DiscoverScreen'
-import LibraryScreen from '../screens/LibraryScreen'
-import SettingScreen from '../screens/SettingScreen'
+import LibraryScreen  from '../screens/LibraryScreen'
+import SettingScreen  from '../screens/SettingScreen'
+
+import PlaylistScreen from '../screens/PlaylistScreen'
+import ArtistScreen   from '../screens/ArtistScreen'
+import MusicScreen    from '../screens/MusicScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -67,6 +71,19 @@ export const Navigator = () => {
             <Text style={{fontSize: 32, alignSelf: 'center'}}>SettingScreen</Text>
           </TouchableOpacity>
 
+          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('PlaylistScreen')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>PlaylistScreen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('ArtistScreen')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>ArtistScreen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('MusicScreen')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>MusicScreen</Text>
+          </TouchableOpacity>
+
           <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'red'}} onPress={() => setShowModal(false)}>
             <Text style={{fontSize: 50, alignSelf: 'center'}}>close</Text>
           </TouchableOpacity>
@@ -82,6 +99,10 @@ export const Navigator = () => {
         <Stack.Screen name="DiscoverScreen" component={DiscoverScreen} />
         <Stack.Screen name="LibraryScreen"  component={LibraryScreen} />
         <Stack.Screen name="SettingScreen"  component={SettingScreen} />
+
+        <Stack.Screen name="MusicScreen"    component={MusicScreen} />
+        <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
+        <Stack.Screen name="ArtistScreen"   component={ArtistScreen} />
       </Stack.Navigator>
 
     </NavigationContainer>
