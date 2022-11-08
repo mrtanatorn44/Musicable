@@ -8,11 +8,13 @@ import { firebase } from "../firestore/Connect";
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
 
+import { Audio } from 'expo-av';
+
 const playlistData = {
   name: 'TOP 2022 Playlist',
   songs: [
     {
-      name: 'Rap God',
+      name: 'Rap God 1',
       image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
       artist: 'Eminem',
       url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Load media from the network
@@ -21,28 +23,28 @@ const playlistData = {
       duration: 372 // Duration in seconds
     },
     {
-      name: 'Rap God',
+      name: 'Rap God 2',
       image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
       artist: 'Eminem',
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Load media from the network
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', // Load media from the network
       album: 'while(1<2)',
       genre: 'Progressive House, Electro House',
       duration: 372 // Duration in seconds
     },
     {
-      name: 'Rap God',
+      name: 'Rap God 3',
       image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
       artist: 'Eminem',
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Load media from the network
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', // Load media from the network
       album: 'while(1<2)',
       genre: 'Progressive House, Electro House',
       duration: 372 // Duration in seconds
     },
     {
-      name: 'Rap God',
+      name: 'Rap God 4',
       image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
       artist: 'Eminem',
-      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Load media from the network
+      url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', // Load media from the network
       album: 'while(1<2)',
       genre: 'Progressive House, Electro House',
       duration: 372 // Duration in seconds
@@ -50,12 +52,78 @@ const playlistData = {
   ]
 }
 
+
 export default function MusicScreen ({route}) {
   const navigation = useNavigation();
   const [playMusic, setPlayMusic] = useState(false);
   const [repeatMusic, setReapeatMusic] = useState(false);
   const [trackIndex, setTrackIndex] = useState(0);
 
+  // const [sound, setSound] = React.useState();
+  const [duration, setDuration] = useState(0);
+
+  const sound = new Audio.Sound();
+
+  async function onPlayMusic() {
+    console.log('Loading Sound');
+    // const { sound, status } = await Audio.Sound.createAsync({ uri: playlistData.songs[trackIndex].url });
+    await sound.loadAsync({ uri: playlistData.songs[trackIndex].url });
+    await sound.playAsync();
+    // const interval = setInterval(() => {
+    //   // setDuration(status.positionMillis)
+    //   console.log(status.positionMillis)
+    // }, 1000);
+    // setDuration(sound.getStatusAsync().then((status) => status.durationMillis))
+    // setSound(sound);
+    // setDuration(status)
+    // console.log(status.positionMillis)
+    console.log('Playing Sound');
+    // await sound.playAsync();
+    sound.setOnPlaybackStatusUpdate(console.log(sound.getStatusAsync().then((status) => status.durationMillis)));
+
+  }
+
+
+  async function onStopMusic() {
+    console.log('Stop Sound');
+    await sound.unloadAsync();
+  }
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log('Unloading Sound');
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
+
+  useEffect(() => {
+    if (playMusic) {
+      console.log('Start music')
+      onPlayMusic()
+    } else {
+      console.log('Stop music')
+      onStopMusic()
+    }
+  }, [playMusic])
+
+  useEffect(() => {
+    if (playMusic) {
+      onStopMusic()
+      onPlayMusic()
+    }
+    
+  }, [trackIndex])
+  const prevSong = () => {
+    if (trackIndex !== 0) {
+      setTrackIndex(trackIndex-1)
+    }
+  }
+  const nextSong = () => {
+    if (trackIndex !== playlistData.songs.length-1) {
+      setTrackIndex(trackIndex+1)
+    }
+  }
   return (
     <SafeAreaView style={styles.container}>
       {/* CONTENT */}
@@ -81,7 +149,7 @@ export default function MusicScreen ({route}) {
         <View style={{height: '10%', justifyContent: 'center', flexDirection: 'column'}}>
           <View style={{backgroundColor: 'white', width: '100%', height: '5%'}}></View>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            <Text style={{fontSize: 18, color: 'white'}}>0:00</Text>
+            <Text style={{fontSize: 18, color: 'white'}}>{duration}</Text>
             <Text style={{fontSize: 18, color: 'white'}}>2:40</Text>
           </View>
         </View>
@@ -90,15 +158,15 @@ export default function MusicScreen ({route}) {
           <TouchableOpacity>
             <Ionicons name="shuffle"            size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => prevSong()}>
             <Ionicons name="play-skip-back"     size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => { setPlayMusic(!playMusic) }}>
+          <TouchableOpacity onPress={() => {setPlayMusic(!playMusic)}}>
             { (playMusic)?
               <Ionicons name="pause" size={66} color="white" />:
               <Ionicons name="play"  size={66} color="white" />}
           </TouchableOpacity>
-          <TouchableOpacity>
+          <TouchableOpacity onPress={() => nextSong()}>
             <Ionicons name="play-skip-forward"  size={66} color="white" />
           </TouchableOpacity>
           <TouchableOpacity onPress={() => setReapeatMusic(!repeatMusic)}>
