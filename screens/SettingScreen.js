@@ -8,7 +8,27 @@ import { firebase } from "../firestore/Connect";
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
 export default function MainScreen({route}) {
   const navigation = useNavigation();
-
+  const subscribe = useState(true)
+  onSubscribe = async (subscribe) =>{
+    await firebase.firestore.collection("users").doc().add({subscribe}).catch((error) =>{
+      alert("error")
+    })
+  }
+  const [username, setUsername] = useState([]);
+  useEffect(() => {
+    firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          setUsername(snapshot.data());
+        } else {
+          console.log("Username does not exists");
+        }
+      });
+  }, []);
   return (
     <SafeAreaView style={styles.container}>
       {/* CONTENT */}
@@ -25,9 +45,9 @@ export default function MainScreen({route}) {
         {/* Options */}
         <View style={{marginVertical: '5%'}}>
           <View style={{flexDirection: 'row', paddingBottom: 10}}>
-            <Text style={styles.text}>Account</Text>
+            <Text style={styles.text}>Account {username.username}</Text>
           </View>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}} onPress={() => onSubscribe(subscribe)}>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="attach-money" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Subscription</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />

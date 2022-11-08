@@ -10,69 +10,45 @@ const {width, height} = Dimensions.get('window');
 
 const userPlaylistData = [
   {
-    name: 'Playlist1',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'อกหักทิพย์',
+    image: 'https://uploads.dailydot.com/2018/10/olli-the-polite-cat.jpg?auto=compress&fm=pjpg'
   },
   {
-    name: 'Playlist2',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'ForReading',
+    image: 'https://antiques.com.au/wp-content/uploads/2021/04/old-books-scaled.jpg'
   },
   {
-    name: 'Playlist3',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'Chill beat',
+    image: 'https://i.scdn.co/image/ab67706c0000bebbcb7db8bdf70f8e8f57fd6d7f'
   },
   {
-    name: 'Playlist4',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'Take me home',
+    image: 'https://photos.hancinema.net/photos/fullsizephoto1280296.jpg'
   },
   {
-    name: 'Playlist5',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'คนเหงา',
+    image: 'https://www.cnet.com/a/img/resize/61c44c6765cb6b8529df884935ad7aefc622aeec/hub/2021/11/03/3c2a7d79-770e-4cfa-9847-66b3901fb5d7/c09.jpg?auto=webp&fit=crop&height=675&width=1200'
   },
   {
-    name: 'Playlist6',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'เพลิดเพลิน',
+    image: 'https://i.pinimg.com/originals/39/e4/4f/39e44f1e597af59afd6cc3aeddb3737c.jpg'
   },
   {
-    name: 'Playlist7',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'คนมีความรัก',
+    image: 'https://i.ytimg.com/vi/6o-ppv72CkI/maxresdefault.jpg'
   },
   {
-    name: 'Playlist8',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'Stupid Song',
+    image: 'https://i.scdn.co/image/ab67706c0000bebb6fc7dd59d13ed9787746ea6a'
   },
   {
-    name: 'Playlist1',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
+    name: 'คนเท่',
+    image: 'https://572616-1851286-raikfcquaxqncofqfm.stackpathdns.com/wp-content/uploads/2022/03/MEME-2-1.jpg'
   },
   {
-    name: 'Playlist2',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist3',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist4',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist5',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist6',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist7',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
-  {
-    name: 'Playlist8',
-    image: 'https://www.cnet.com/a/img/resize/44594962280511db743fe2af25b51c9dc89c7915/hub/2021/06/21/233d61c4-8184-43a9-bb41-da8791207654/apple-music-iphone-with-headphones-001.jpg?auto=webp&fit=crop&height=1200&width=1200'
-  },
+    name: 'คนหล่อ',
+    image: 'https://i1.sndcdn.com/avatars-VzxsY5vKPrJpdjyB-PSNvdw-t500x500.jpg'
+  }
 ]
 const userPlaylistRowData = userPlaylistData.reduce(function (rows, key, index) { 
   return (index % 2 == 0 ? rows.push([key]) 
@@ -81,136 +57,98 @@ const userPlaylistRowData = userPlaylistData.reduce(function (rows, key, index) 
 
 const officialPlaylistData = [
   {
+    name: 'TodayTopHits',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'SZA is on top of the Hottest'
+  },
+  {
+    name: 'Daily Lift',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'Get in the zone with these'
+  },
+  {
+    name: '50 อันดับยอดนิยม',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'ที่สุดเพลงไทยฮิต ต้องเพลย์ลิสต์นี้!'
+  },
+  {
+    name: 'เพลงไทยสายชิลล์',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'ชิลล์กันแบบเต็มๆกับเพลงอะคูสติกเพราะๆ'
+  },
+  {
+    name: 'ฮิตติดกระแส',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'เพลงใหม่มาแรง เพลงฮิตล่าสุด'
+  },
+  {
+    name: 'มิกซ์อินดี้',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: ''
+  },
+  {
+    name: 'มิกซ์สุขใจ',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: ''
+  },
+  {
+    name: 'ฉันฟังเพลงไทย',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: 'ที่สุดเพลงไทยฮิต ต้องเพลย์ลิสต์นี้!'
+  },
+  {
+    name: 'Top Songs 2022',
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: ''
+  },
+  {
     name: 'Playlist1',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist2',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist3',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist4',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist5',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist6',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist7',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist8',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist1',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist2',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist3',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist4',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist5',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist6',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist7',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
-  },
-  {
-    name: 'Playlist8',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg'
+    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    title: ''
   },
 ]
 
 const SuggestedArtistsData = [
   {
-    name: 'Artist1',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Joji',
+    image: 'https://i.scdn.co/image/ab67616d0000b27353f6fa0d2589c6a7174f4b81'
   },
   {
-    name: 'Artist2',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Anatomy Rabbit',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb001da630489c592d46065c1b'
   },
   {
-    name: 'Artist3',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Sam Smith',
+    image: 'https://i.scdn.co/image/ab67616d00001e02f3ea7140c4a8ba597d0b276b'
   },
   {
-    name: 'Artist4',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Coldplay',
+    image: 'https://i.scdn.co/image/ab67706f00000003a231f671c289555cfd09f716'
   },
   {
-    name: 'Artist5',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Keshi',
+    image: 'https://i.scdn.co/image/ab67616d0000b27394237be74edae41560152bce'
   },
   {
-    name: 'Artist6',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'The Weeknd',
+    image: 'https://res.theconcert.com/c_thumb/987f0076bc673e85820cc4ef97953a683/the-weeknd.jpg'
   },
   {
-    name: 'Artist7',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Polycat',
+    image: 'https://www.thaiticketmajor.com/variety/img_content/imgeditor/44956648_1996770933721525_4152932259369844736_n.jpg'
   },
   {
-    name: 'Artist8',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Billkin',
+    image: 'https://i.scdn.co/image/ab6761610000e5ebfb447e233231e16d14c58f57'
   },
   {
-    name: 'Artist1',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
+    name: 'Jeff Bernat',
+    image: 'https://i.scdn.co/image/ab6761610000e5eb542d7186c5db3b26d923a49d'
   },
   {
-    name: 'Artist2',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist3',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist4',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist5',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist6',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist7',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
-  {
-    name: 'Artist8',
-    image: 'https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp'
-  },
+    name: 'Slchld',
+    image: 'https://cdns-images.dzcdn.net/images/artist/2ac1ff5774447e912a4323e3d5622966/500x500.jpg'
+  }
 ]
 
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
@@ -219,21 +157,6 @@ export default function MainScreen() {
   const page = 'home'
   const [myText, setMyText] = useState('');
 
-  const [username, setUsername] = useState([]);
-  useEffect(() => {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(firebase.auth().currentUser.uid)
-      .get()
-      .then((snapshot) => {
-        if (snapshot.exists) {
-          setUsername(snapshot.data());
-        } else {
-          console.log("Username does not exists");
-        }
-      });
-  }, []);
 
   const renderUserPlaylist = ({ item }) => (
     <View>
@@ -276,7 +199,7 @@ export default function MainScreen() {
         />
         <View style={{width: '90%', height: '30%'}}>
           <Text style={styles.text} numberOfLines={1} >{item.name}</Text>
-          <Text style={[styles.text, {fontSize: 12, color: 'gray'}]} numberOfLines={2}>Artist, Artist, Artist, Artist, Artist, Artist, Artist</Text>
+          <Text style={[styles.text, {fontSize: 12, color: 'gray'}]} numberOfLines={2}>{item.title}</Text>
         </View>
       </TouchableOpacity> 
     </View>
