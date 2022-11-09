@@ -10,69 +10,45 @@ const {width, height} = Dimensions.get('window');
 
 const podcastsData = [
   {
-    name: 'Podcast1',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'The Ghost Radio',
+    image: 'https://i.ytimg.com/vi/lakdbG7ieRs/maxresdefault.jpg'
   },
   {
-    name: 'Podcast2',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'หลอนตามสั่ง',
+    image: 'https://s.isanook.com/jo/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9qb294LWNtcy1pbWFnZS0xMjUxMzE2MTYxLmZpbGUubXlxY2xvdWQuY29tLzIwMjEvMDkvMjcvNjI3NmM3ZjEtMTIyMy00NWYxLTg3ZTktMjk3N2JiODZkNzI1LmpwZy8xMDAw.jpg'
   },
   {
-    name: 'Podcast3',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'คำนี้ดี',
+    image: 'https://thestandard.co/wp-content/uploads/2018/08/LOGO-KND-1-600x600.jpg?x60466'
   },
   {
-    name: 'Podcast4',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'วันนี้เป็นยังไงบ้าง',
+    image: 'https://images-se-ed.com/ws/Storage/Originals/978616/182/9786161825720L.jpg?h=f1211fc470967b912e9b3c8910feb52e'
   },
   {
-    name: 'Podcast5',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'พูดมาก Podcast',
+    image: 'https://storage.buzzsprout.com/variants/ts1frh5vr11v3esupb7amoleqytv/60854458c4d1acdf4e1c2f79c4137142d85d78e379bdafbd69bd34c85f5819ad.jpg'
   },
   {
-    name: 'Podcast6',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'เพื่อนกันคุยจนดึก',
+    image: 'https://is3-ssl.mzstatic.com/image/thumb/Podcasts112/v4/9b/16/40/9b1640c0-0afa-176b-e610-ee6b097ab141/mza_4794616745179748952.jpg/250x250bb.jpg'
   },
   {
-    name: 'Podcast7',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: '8 Minute History',
+    image: 'https://thestandard.co/wp-content/uploads/2021/02/logo-minutes-history-600x600.jpg?x60466'
   },
   {
-    name: 'Podcast8',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'The Standard',
+    image: 'https://pbs.twimg.com/profile_images/1371418327726264320/_9XbcEOG_400x400.jpg'
   },
   {
-    name: 'Podcast1',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
+    name: 'พี่อ้อยพี่ฉอด',
+    image: 'https://www.innnews.co.th/wp-content/uploads/2021/08/3F984A73-2023-4A3E-837C-B7064050F5F7.jpeg'
   },
   {
-    name: 'Podcast2',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast3',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast4',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast5',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast6',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast7',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
-  {
-    name: 'Podcast8',
-    image: 'https://img.freepik.com/free-vector/gradient-podcast-cover-template_23-2149449551.jpg?w=2000'
-  },
+    name: '5 Minutes',
+    image: 'https://i.scdn.co/image/d06cb0c89ef77620e8d96d864866284b70f727ab'
+  }
 ]
 
 const browseData = [
@@ -102,16 +78,7 @@ const browseData = [
   },
   {
     name: 'Language'
-  },
-  {
-    name: 'Genre'
-  },
-  {
-    name: 'Podcast'
-  },
-  {
-    name: 'Followed'
-  },
+  }
 ]
 const browseRowData = browseData.reduce(function (rows, key, index) { 
   return (index % 3 == 0 ? rows.push([key]) 

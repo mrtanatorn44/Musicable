@@ -58,53 +58,53 @@ const userPlaylistRowData = userPlaylistData.reduce(function (rows, key, index) 
 const officialPlaylistData = [
   {
     name: 'TodayTopHits',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://i.scdn.co/image/ab67706f000000031817e5fdb5fab133b0c4b24a',
     title: 'SZA is on top of the Hottest'
   },
   {
     name: 'Daily Lift',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://i.scdn.co/image/ab67706f0000000379b71c14d0de6559395718b1',
     title: 'Get in the zone with these'
   },
   {
     name: '50 อันดับยอดนิยม',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://charts-images.scdn.co/assets/locale_en/regional/daily/region_th_large.jpg',
     title: 'ที่สุดเพลงไทยฮิต ต้องเพลย์ลิสต์นี้!'
   },
   {
     name: 'เพลงไทยสายชิลล์',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://i.scdn.co/image/ab67706f000000037ce4e96df973b779974d524c',
     title: 'ชิลล์กันแบบเต็มๆกับเพลงอะคูสติกเพราะๆ'
   },
   {
     name: 'ฮิตติดกระแส',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://i.scdn.co/image/ab67706f00000002cf5a704113b07736c4e07010',
     title: 'เพลงใหม่มาแรง เพลงฮิตล่าสุด'
   },
   {
     name: 'มิกซ์อินดี้',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
-    title: ''
+    image: 'https://i.scdn.co/image/ab67706f0000000346cdc3dc94a75071935f7215',
+    title: 'อินดี้โดนใจ'
   },
   {
     name: 'มิกซ์สุขใจ',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
-    title: ''
+    image: 'https://i.scdn.co/image/ab67616d0000b273092484cae9035e4f48d76cab',
+    title: 'สุขใจทุกครั้งที่ได้ฟัง'
   },
   {
     name: 'ฉันฟังเพลงไทย',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
+    image: 'https://i.scdn.co/image/ab67706f0000000324935074fa8c08fb0e7993f2',
     title: 'ที่สุดเพลงไทยฮิต ต้องเพลย์ลิสต์นี้!'
   },
   {
     name: 'Top Songs 2022',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
-    title: ''
+    image: 'https://i.scdn.co/image/ab67706c0000bebb36f265a516e7f3a73d1a05f4',
+    title: 'Todays Top Hits'
   },
   {
-    name: 'Playlist1',
-    image: 'https://ik.imagekit.io/gdgtme/wp-content/uploads/2022/02/How-To-Create-A-Music-Playlist-For-Offline-Listening-In-2022.jpg',
-    title: ''
+    name: 'Workspace 2021',
+    image: 'https://i.scdn.co/image/ab67706f000000032973d60df0c69b14865f35d2',
+    title: 'time for a good day'
   },
 ]
 
