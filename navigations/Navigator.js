@@ -17,7 +17,7 @@ import PlaylistScreen from '../screens/PlaylistScreen'
 import ArtistScreen   from '../screens/ArtistScreen'
 import MusicScreen    from '../screens/MusicScreen'
 
-import MusicXClass     from '../screens/MusicXClass'
+// import MusicXClass     from '../screens/MusicXClass'
 // import MixScreen      from '../screens/MusicXFunctional'
 // import Mix2Screen      from '../screens/MusicScreen'
 
@@ -118,7 +118,7 @@ export const Navigator = () => {
         <Stack.Screen name="MusicScreen"    component={MusicScreen} />
         <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
         <Stack.Screen name="ArtistScreen"   component={ArtistScreen} />
-        <Stack.Screen name="MusicXClass"     component={MusicXClass} />
+        {/* <Stack.Screen name="MusicXClass"     component={MusicXClass} /> */}
         {/* <Stack.Screen name="MixScreen"      component={MixScreen} />
         <Stack.Screen name="Mix2Screen"      component={Mix2Screen} /> */}
 
