@@ -40,7 +40,7 @@ var playlistData = {
       name: 'Rap God 4',
       image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
       artist: 'Eminem',
-      uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3', // Load media from the network
+      uri: 'https://drive.google.com/uc?export=download&id=1u3jCoiDasVR4x2Ys419F1FA_PKLI3CKy', // Load media from the network
       album: 'while(1<2)',
       genre: 'Progressive House, Electro House',
     }
@@ -60,6 +60,7 @@ export default function(props) {
 }
 
 class MusicScreen extends React.Component {
+
   constructor(props) {
     super(props);
     this.index = 0;
@@ -89,41 +90,51 @@ class MusicScreen extends React.Component {
   }
 
   componentDidMount() {
-    Audio.setAudioModeAsync({
-      allowsRecordingIOS: false,
-      staysActiveInBackground: true,
-      interruptionModeIOS: InterruptionModeIOS.DuckOthers,
-      playsInSilentModeIOS: true,
-      shouldDuckAndroid: true,
-      interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
-      playThroughEarpieceAndroid: false,
-    });
+    try {
+      Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        staysActiveInBackground: true,
+        interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+        interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
+        playThroughEarpieceAndroid: false,
+      });  
+    } catch (error) {
+      console.error(error)
+    }
+    
   }
 
   async _loadNewPlaybackInstance(playing) {
-    if (this.playbackInstance != null) {
-      await this.playbackInstance.unloadAsync();
-      // this.playbackInstance.setOnPlaybackStatusUpdate(null);
-      this.playbackInstance = null;
+    try {
+      if (this.playbackInstance != null) {
+        await this.playbackInstance.unloadAsync();
+        // this.playbackInstance.setOnPlaybackStatusUpdate(null);
+        this.playbackInstance = null;
+      }
+  
+      const source = { uri: playlistData.songs[this.index].uri };
+      const initialStatus = {
+        shouldPlay: playing,
+        rate: this.state.rate,
+        shouldCorrectPitch: this.state.shouldCorrectPitch,
+        volume: this.state.volume,
+        isMuted: this.state.muted,
+        isLooping: this.state.loopingType === 1,
+      };
+      
+      const { sound, status } = await Audio.Sound.createAsync(
+        source,
+        initialStatus,
+        this._onPlaybackStatusUpdate
+      );
+      this.playbackInstance = sound;
+      this._updateScreenForLoading(false);
+    } catch (error) {
+      console.error(error)
     }
-
-    const source = { uri: playlistData.songs[this.index].uri };
-    const initialStatus = {
-      shouldPlay: playing,
-      rate: this.state.rate,
-      shouldCorrectPitch: this.state.shouldCorrectPitch,
-      volume: this.state.volume,
-      isMuted: this.state.muted,
-      isLooping: this.state.loopingType === 1,
-    };
     
-    const { sound, status } = await Audio.Sound.createAsync(
-      source,
-      initialStatus,
-      this._onPlaybackStatusUpdate
-    );
-    this.playbackInstance = sound;
-    this._updateScreenForLoading(false);
   }
 
   _mountVideo = (component) => {
@@ -365,6 +376,16 @@ class MusicScreen extends React.Component {
 
   render() {
     const { navigation } = this.props;
+    // console.log(this.props.route.params.form)
+    const onBackButton = () => {
+      const params = this.props.route.params
+      navigation.navigate( params.from, 
+        {
+          from: params.from_parent, 
+          type: params.from_type, 
+          id:  params.from_id
+        })
+    }
     return (
       <SafeAreaView style={styles.container}>
 
@@ -378,7 +399,9 @@ class MusicScreen extends React.Component {
       <View style={styles.content}>
         {/* Top Panel */}
         <View style={{marginVertical: '3%', width: '100%', height: '10%', flexDirection: 'row', justifyContent: 'space-between'}}>
-          <TouchableOpacity onPress={() => navigation.navigate(this.props.fromPage? this.props.fromPage : 'HomeScreen')}>
+          {/* Back Button */}
+          <TouchableOpacity 
+            onPress={() => onBackButton()}>
             <MaterialIcons style={{textAlign: 'left'}} name="keyboard-arrow-left" size={32} color="white" />
           </TouchableOpacity>
           <Text style={{fontSize: 24, color: 'white'}} numberOfLines={1}>{playlistData.name}</Text>

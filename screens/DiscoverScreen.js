@@ -94,7 +94,7 @@ export default function DiscoverScreen() {
     <View>
       <TouchableOpacity 
         style={styles.podcastsItem} 
-        onPress={() => setMyText(item.name)}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'podcast', id: 'playlist_id_podcast'})}
       >
         <Image
           style={{width: '90%', height: '60%', borderRadius: 20}}
@@ -112,7 +112,7 @@ export default function DiscoverScreen() {
     <View>
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => setMyText(item[0].name)}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[0].name})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 
@@ -124,7 +124,7 @@ export default function DiscoverScreen() {
       </TouchableOpacity> 
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => setMyText(item[1].name)}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[1].name})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 
@@ -136,7 +136,7 @@ export default function DiscoverScreen() {
       </TouchableOpacity> 
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => setMyText(item[2].name)}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[2].name})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 

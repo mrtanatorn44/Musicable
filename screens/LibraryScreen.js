@@ -131,8 +131,7 @@ export default function LibraryScreen() {
     <View>
       <TouchableOpacity 
         style={styles.libraryItem} 
-        onPress={() => setMyText(item[0].name)}
-      >
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'LibraryScreen', type: 'playlist', id: 'playlist_id'})}>
         <View style={{flexDirection: 'row',width: '90%', height: '70%'}}>
           <View style={{width: '50%', height: '100%'}}>
             <Image
@@ -162,8 +161,7 @@ export default function LibraryScreen() {
 
       <TouchableOpacity 
         style={styles.libraryItem} 
-        onPress={() => setMyText(item[1].name)}
-      >
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'LibraryScreen', type: 'playlist', id: 'playlist_id'})}>
         <View style={{flexDirection: 'row',width: '90%', height: '70%'}}>
           <View style={{width: '50%', height: '100%'}}>
             <Image
@@ -222,12 +220,14 @@ export default function LibraryScreen() {
           <View style={{flexDirection: 'row', paddingBottom: 10}}>
             <Text style={styles.text}>Your Activities</Text>
           </View>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}
+            onPress={() => navigation.navigate('PlaylistScreen', {from: 'LibraryScreen', type: 'userliked', id: 'user_id'})}>
             <Octicons style={{width: '15%'}} name="heart-fill" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Liked Songs</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}>
+          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}
+            onPress={() => navigation.navigate('ArtistScreen', {from: 'LibraryScreen', id: 'user_id'})}>
             <Octicons style={{width: '15%'}} name="people" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Followed Artists</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
