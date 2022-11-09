@@ -17,6 +17,10 @@ import PlaylistScreen from '../screens/PlaylistScreen'
 import ArtistScreen   from '../screens/ArtistScreen'
 import MusicScreen    from '../screens/MusicScreen'
 
+import MusicXClass     from '../screens/MusicXClass'
+// import MixScreen      from '../screens/MusicXFunctional'
+// import Mix2Screen      from '../screens/MusicScreen'
+
 const Stack = createNativeStackNavigator();
 
 export const Navigator = () => {
@@ -83,7 +87,18 @@ export const Navigator = () => {
             onPress={() => navigationRef.navigate('MusicScreen')}>
             <Text style={{fontSize: 32, alignSelf: 'center'}}>MusicScreen</Text>
           </TouchableOpacity>
-
+          {/* <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('MusicXClass')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>MusicXClass</Text>
+          </TouchableOpacity> */}
+          {/* <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('MixScreen')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>MixScreen</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
+            onPress={() => navigationRef.navigate('Mix2Screen')}>
+            <Text style={{fontSize: 32, alignSelf: 'center'}}>Mix2Screen</Text>
+          </TouchableOpacity> */}
           <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'red'}} onPress={() => setShowModal(false)}>
             <Text style={{fontSize: 50, alignSelf: 'center'}}>close</Text>
           </TouchableOpacity>
@@ -103,6 +118,10 @@ export const Navigator = () => {
         <Stack.Screen name="MusicScreen"    component={MusicScreen} />
         <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
         <Stack.Screen name="ArtistScreen"   component={ArtistScreen} />
+        <Stack.Screen name="MusicXClass"     component={MusicXClass} />
+        {/* <Stack.Screen name="MixScreen"      component={MixScreen} />
+        <Stack.Screen name="Mix2Screen"      component={Mix2Screen} /> */}
+
       </Stack.Navigator>
 
     </NavigationContainer>
