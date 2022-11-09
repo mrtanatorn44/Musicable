@@ -226,12 +226,12 @@ export default function LibraryScreen() {
             <Text style={[styles.text, {width: '70%'}]}>Liked Songs</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}
+          {/* <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}
             onPress={() => navigation.navigate('ArtistScreen', {from: 'LibraryScreen', id: 'user_id'})}>
             <Octicons style={{width: '15%'}} name="people" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Followed Artists</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
 
       </View>

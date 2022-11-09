@@ -14,12 +14,7 @@ import LibraryScreen  from '../screens/LibraryScreen'
 import SettingScreen  from '../screens/SettingScreen'
 
 import PlaylistScreen from '../screens/PlaylistScreen'
-import ArtistScreen   from '../screens/ArtistScreen'
 import MusicScreen    from '../screens/MusicScreen'
-
-// import MusicXClass     from '../screens/MusicXClass'
-// import MixScreen      from '../screens/MusicXFunctional'
-// import Mix2Screen      from '../screens/MusicScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -56,59 +51,6 @@ export const Navigator = () => {
 
   return (
     <NavigationContainer ref={navigationRef}>
-      <Modal transparent={true} visible={showModal} > 
-        <View style={{position: 'absolute', width: '80%', height: '80%', start: '10%', top: '10%'}}>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'white', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('HomeScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>HomeScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'white', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('DiscoverScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>DiscoverScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'white', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('LibraryScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>LibraryScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'white', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('SettingScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>SettingScreen</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('PlaylistScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>PlaylistScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('ArtistScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>ArtistScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('MusicScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>MusicScreen</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('MusicXClass')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>MusicXClass</Text>
-          </TouchableOpacity> */}
-          {/* <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('MixScreen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>MixScreen</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'blue', marginBottom: 1}}
-            onPress={() => navigationRef.navigate('Mix2Screen')}>
-            <Text style={{fontSize: 32, alignSelf: 'center'}}>Mix2Screen</Text>
-          </TouchableOpacity> */}
-          <TouchableOpacity style={{width: '100%', height: '10%', backgroundColor: 'red'}} onPress={() => setShowModal(false)}>
-            <Text style={{fontSize: 50, alignSelf: 'center'}}>close</Text>
-          </TouchableOpacity>
-        </View>
-      </Modal>
-
-      <TouchableOpacity style={{position: 'absolute', justifyContent: 'center', zIndex: 1,backgroundColor: 'red', width: 50, height: 50, top: '80%', end: 0, borderRadius: 100}} onPress={() => setShowModal(true)}>
-        <Text style={{textAlign: 'center', color: 'white'}}>admin</Text>
-      </TouchableOpacity>
-      
       <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'modal', animationTypeForReplace: 'push', animation:'none' }}>
         <Stack.Screen name="HomeScreen"     component={HomeScreen} />
         <Stack.Screen name="DiscoverScreen" component={DiscoverScreen} />
@@ -117,11 +59,6 @@ export const Navigator = () => {
 
         <Stack.Screen name="MusicScreen"    component={MusicScreen} />
         <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
-        <Stack.Screen name="ArtistScreen"   component={ArtistScreen} />
-        {/* <Stack.Screen name="MusicXClass"     component={MusicXClass} /> */}
-        {/* <Stack.Screen name="MixScreen"      component={MixScreen} />
-        <Stack.Screen name="Mix2Screen"      component={Mix2Screen} /> */}
-
       </Stack.Navigator>
 
     </NavigationContainer>
