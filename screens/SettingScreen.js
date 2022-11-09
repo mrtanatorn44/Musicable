@@ -8,12 +8,12 @@ import { firebase } from "../firestore/Connect";
 // https://i.insider.com/5b3f8cff447aad22008b4c2f?width=750&format=jpeg&auto=webp
 export default function MainScreen({route}) {
   const navigation = useNavigation();
-  const subscribe = useState(true)
-  onSubscribe = async (subscribe) =>{
-    await firebase.firestore.collection("users").doc().add({subscribe}).catch((error) =>{
-      alert("error")
-    })
-  }
+  // const subscribe = useState(true)
+  // onSubscribe = async (subscribe) =>{
+  //   await firebase.firestore.collection("users").doc().add({subscribe}).catch((error) =>{
+  //     alert("error")
+  //   })
+  // }
   const [username, setUsername] = useState([]);
   useEffect(() => {
     firebase
@@ -47,11 +47,11 @@ export default function MainScreen({route}) {
           <View style={{flexDirection: 'row', paddingBottom: 10}}>
             <Text style={styles.text}>Account {username.username}</Text>
           </View>
-          <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}} onPress={() => onSubscribe(subscribe)}>
+          {/* <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}} onPress={() => onSubscribe(subscribe)}>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="attach-money" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Subscription</Text>
             <MaterialIcons style={{width: '15%', textAlign: 'center'}} name="keyboard-arrow-right" size={32} color="white" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={{flexDirection: 'row', paddingVertical: 10}}>
             <Octicons style={{width: '15%', textAlign: 'center'}} name="download" size={32} color="white" />
             <Text style={[styles.text, {width: '70%'}]}>Downloaded</Text>
