@@ -37,17 +37,17 @@ export const Navigator = () => {
 
   if (initializing) return null;
 
-  if (!user) {
-    return (
-      <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'modal', animationTypeForReplace: 'push', animation:'none' }}>
-          <Stack.Screen name="SplashScreen"   component={SplashScreen} />
-          <Stack.Screen name="LoginScreen"    component={LoginScreen} />
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    );
-  }
+  // if (!user) {
+  //   return (
+  //     <NavigationContainer ref={navigationRef}>
+  //       <Stack.Navigator screenOptions={{ headerShown: false, presentation: 'modal', animationTypeForReplace: 'push', animation:'none' }}>
+  //         <Stack.Screen name="SplashScreen"   component={SplashScreen} />
+  //         <Stack.Screen name="LoginScreen"    component={LoginScreen} />
+  //         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+  //       </Stack.Navigator>
+  //     </NavigationContainer>
+  //   );
+  // }
 
   return (
     <NavigationContainer ref={navigationRef}>

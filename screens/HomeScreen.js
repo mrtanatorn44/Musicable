@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
 import {firebase} from "../firestore/Connect"
-import * as MusicsModel from '../firestore/MusicsModel'
+// import * as MusicsModel from '../firestore/MusicsModel'
+import coreData from '../coreData.json';
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
@@ -26,14 +27,13 @@ export default function MainScreen() {
   const testData = async () => {
     console.log('\n\n\n\n\n\n\n\n\n\n\n\n')
 
-    return
     try {
-      data.forEach( async (music, index) => {
+      myData.playlist.forEach( async (data, index) => {
         // delete music.link
         // music.like = Math.floor(Math.random() * (music.view - music.view/10 + 1) + music.view/10)
-        await MusicsModel.addMusic(music, (isDone) => {
-          if (isDone) console.log((index+1) + ' added  : ' + music.name)
-          else console.log((index+1) + ' failed : ' + music.name)
+        await MusicsModel.addData(data, (isDone) => {
+          if (isDone) console.log((index+1) + ' added  : ' + data.name)
+          else console.log((index+1) + ' failed : ' + data.name)
         })
       });
     } catch (error) {
@@ -56,6 +56,18 @@ export default function MainScreen() {
   }
 
   const loadPlaylist = async () => {
+    var data = []
+    coreData.playlist.forEach((playlist) => {
+      if (playlist.official == null) {
+        data.push(playlist)
+      }
+    })
+    const rowData = data.reduce(function (rows, key, index) { 
+      return (index % 2 == 0 ? rows.push([key]) 
+        : rows[rows.length-1].push(key)) && rows;
+    }, []);
+    setPlaylistData(rowData)
+    return
     try {
       await MusicsModel.getPopularPlaylist((res) => {
         const playlistRowData = res.reduce(function (rows, key, index) { 
@@ -69,6 +81,14 @@ export default function MainScreen() {
     }
   }
   const loadPlaylistOfficial = async () => {
+    var data = []
+    coreData.playlist.forEach((playlist) => {
+      if (playlist.official == true) {
+        data.push(playlist)
+      }
+    })
+    setPlaylistOfficialData(data)
+    return
     try {
       await MusicsModel.getPopularPlaylistOfficial((playlistData) => {
         setPlaylistOfficialData(playlistData)
@@ -78,6 +98,14 @@ export default function MainScreen() {
     }
   }
   const loadArtist = async () => {
+    var data = []
+    coreData.artist.forEach((artist) => {
+      if (artist.podcast == null) {
+        data.push(artist)
+      }
+    })
+    setArtistsData(data)
+    return
     try {
       await MusicsModel.getPopularArtist((res) => {
         setArtistsData(res)

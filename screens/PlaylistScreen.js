@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons, MaterialIcons } from '@expo/vector-icons'; 
 import { firebase } from "../firestore/Connect";
-import * as MusicsModel from '../firestore/MusicsModel'
+// import * as MusicsModel from '../firestore/MusicsModel'
+import coreData from '../coreData.json';
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
@@ -110,6 +111,8 @@ export default function PlaylistScreen ({route}) {
         }
       }))
     } else if (route.params.type == 'artist') { 
+        
+        return
         // get Artist data
         await MusicsModel.getArtist(route.params.id, (artistData) => {
           setPlaylist(playlist => ({

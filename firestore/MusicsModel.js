@@ -93,6 +93,7 @@ export const getPopularArtist = (success) => {
 }
 
 export const getArtist = (artist_name, success) => {
+  console.info('FB : getArtist')
   artistColl.get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
@@ -108,6 +109,7 @@ export const getArtist = (artist_name, success) => {
 }
 
 export const getMusicFromArtist = (artist_name, success) => {
+  console.info('FB : getMusicFromArtist')
   musicColl.where("artist", "==", artist_name).get()
     .then((snapshot) => {
       var musicData = []
