@@ -6,52 +6,12 @@ import * as Font from "expo-font";
 import Slider from "@react-native-community/slider";
 import Toast from 'react-native-root-toast';
 import { useNavigation } from '@react-navigation/native';
+import * as MusicsModel from '../firestore/MusicsModel'
 
 import { MaterialIcons, Ionicons } from '@expo/vector-icons'; 
 
-var playlistData = {
-  name: 'TOP 2022 Playlist',
-  songs: [
-    {
-      name: 'Rap God 1',
-      image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
-      artist: 'Eminem',
-      uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3', // Load media from the network
-      album: 'while(1<2)',
-      genre: 'Progressive House, Electro House',
-    },
-    {
-      name: 'Rap God 2',
-      image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
-      artist: 'Eminem',
-      uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3', // Load media from the network
-      album: 'while(1<2)',
-      genre: 'Progressive House, Electro House',
-    },
-    {
-      name: 'Rap God 3',
-      image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
-      artist: 'Eminem',
-      uri: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3', // Load media from the network
-      album: 'while(1<2)',
-      genre: 'Progressive House, Electro House',
-    },
-    {
-      name: 'Rap God 4',
-      image : 'https://i.icanvas.com/TDR176?d=2&sh=s&p=1&bg=g&t=1623548545',
-      artist: 'Eminem',
-      uri: 'https://drive.google.com/uc?export=download&id=1u3jCoiDasVR4x2Ys419F1FA_PKLI3CKy', // Load media from the network
-      album: 'while(1<2)',
-      genre: 'Progressive House, Electro House',
-    }
-  ]
-}
-
-const { width: DEVICE_WIDTH, height: DEVICE_HEIGHT } = Dimensions.get("window");
-const FONT_SIZE = 14;
 const LOADING_STRING = "... loading ...";
 const BUFFERING_STRING = "...buffering...";
-const VIDEO_CONTAINER_HEIGHT = (DEVICE_HEIGHT * 2.0) / 5.0 - FONT_SIZE * 2;
 
 export default function(props) {
   const navigation = useNavigation();
@@ -63,11 +23,13 @@ class MusicScreen extends React.Component {
 
   constructor(props) {
     super(props);
-    this.index = 0;
+    this.index = this.props.route.params.music_idx;
     this.isSeeking = false;
     this.shouldPlayAtEndOfSeek = false;
     this.playbackInstance = null;
     this.state = {
+      playlistname : '',
+      music : this.props.route.params.music,
       playbackInstanceName: LOADING_STRING,
       loopingType: 0,
       muted: false,
@@ -80,8 +42,6 @@ class MusicScreen extends React.Component {
       shouldCorrectPitch: true,
       volume: 1.0,
       rate: 1.0,
-      videoWidth: DEVICE_WIDTH,
-      videoHeight: VIDEO_CONTAINER_HEIGHT,
       poster: false,
       useNativeControls: false,
       fullscreen: false,
@@ -90,6 +50,8 @@ class MusicScreen extends React.Component {
   }
 
   componentDidMount() {
+    console.log('componentDidMount')
+
     try {
       Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
@@ -99,23 +61,29 @@ class MusicScreen extends React.Component {
         shouldDuckAndroid: true,
         interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
         playThroughEarpieceAndroid: false,
-      });  
+      });
+      // console.log(this.state.music)
     } catch (error) {
       console.error(error)
     }
-    
   }
 
   async _loadNewPlaybackInstance(playing) {
+
     try {
+      console.log('loadNewPlayback')
       if (this.playbackInstance != null) {
+        console.log('playback not null unload it')
+
         await this.playbackInstance.unloadAsync();
         // this.playbackInstance.setOnPlaybackStatusUpdate(null);
         this.playbackInstance = null;
       }
-  
-      const source = { uri: playlistData.songs[this.index].uri };
+      this.playbackInstance = null;
+
+      const source = { uri: this.state.music[this.index].uri };
       const initialStatus = {
+        progressUpdateIntervalMillis: 500,
         shouldPlay: playing,
         rate: this.state.rate,
         shouldCorrectPitch: this.state.shouldCorrectPitch,
@@ -123,13 +91,18 @@ class MusicScreen extends React.Component {
         isMuted: this.state.muted,
         isLooping: this.state.loopingType === 1,
       };
-      
+      console.log('create Asynch')
+
       const { sound, status } = await Audio.Sound.createAsync(
         source,
         initialStatus,
         this._onPlaybackStatusUpdate
       );
+      console.log('cast')
+
       this.playbackInstance = sound;
+      console.log('false')
+
       this._updateScreenForLoading(false);
     } catch (error) {
       console.error(error)
@@ -138,11 +111,13 @@ class MusicScreen extends React.Component {
   }
 
   _mountVideo = (component) => {
+    console.log('_mountVideo')
     this._video = component;
     this._loadNewPlaybackInstance(false);
   };
 
   _updateScreenForLoading(isLoading) {
+    console.log('_updateScreenForLoading')
     if (isLoading) {
       this.setState({
         isPlaying: false,
@@ -153,86 +128,65 @@ class MusicScreen extends React.Component {
       });
     } else {
       this.setState({
-        playbackInstanceName: playlistData.songs[this.index].name,
+        playbackInstanceName: this.state.playlistname,
         isLoading: false,
       });
     }
   }
 
   _onPlaybackStatusUpdate = (status) => {
-    if (status.isLoaded) {
-      this.setState({
-        playbackInstancePosition: status.positionMillis,
-        playbackInstanceDuration: status.durationMillis,
-        shouldPlay: status.shouldPlay,
-        isPlaying: status.isPlaying,
-        isBuffering: status.isBuffering,
-        rate: status.rate,
-        muted: status.isMuted,
-        volume: status.volume,
-        loopingType: status.isLooping ? 1 : 0,
-        shouldCorrectPitch: status.shouldCorrectPitch,
-      });
-      if (status.didJustFinish && !status.isLooping) {
-        this._advanceIndex(true);
-        this._updatePlaybackInstanceForIndex(true);
+    try {
+      if (status.isLoaded) {
+        console.log("playback was loading")
+        this.setState({
+          playbackInstancePosition: status.positionMillis,
+          playbackInstanceDuration: status.durationMillis,
+          shouldPlay: status.shouldPlay,
+          isPlaying: status.isPlaying,
+          isBuffering: status.isBuffering,
+          rate: status.rate,
+          muted: status.isMuted,
+          volume: status.volume,
+          loopingType: status.isLooping ? 1 : 0,
+          shouldCorrectPitch: status.shouldCorrectPitch,
+        });
+        if (status.didJustFinish && !status.isLooping) {
+          console.log('status.didJustFinish && !status.isLooping')
+          this._advanceIndex(true);
+          this._updatePlaybackInstanceForIndex(true);
+        }
+      } else {
+        console.log("playback error")
+        if (status.error) {
+          console.log(`FATAL PLAYER ERROR: ${status.error}`);
+        }
       }
-    } else {
-      if (status.error) {
-        console.log(`FATAL PLAYER ERROR: ${status.error}`);
+    } catch (error) {
+      try {
+        Audio.setAudioModeAsync({
+          allowsRecordingIOS: false,
+          staysActiveInBackground: true,
+          interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+          playsInSilentModeIOS: true,
+          shouldDuckAndroid: true,
+          interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
+          playThroughEarpieceAndroid: false,
+        });
+        // console.log(this.state.music)
+      } catch (error) {
+        console.error(error)
       }
+      console.error(error)
     }
-  };
-
-  _onLoadStart = () => {
-    console.log(`ON LOAD START`);
-  };
-
-  _onLoad = (status) => {
-    console.log(`ON LOAD : ${JSON.stringify(status)}`);
-  };
-
-  _onError = (error) => {
-    console.log(`ON ERROR : ${error}`);
-  };
-
-  _onReadyForDisplay = (event) => {
-    const widestHeight =
-      (DEVICE_WIDTH * event.naturalSize.height) / event.naturalSize.width;
-    if (widestHeight > VIDEO_CONTAINER_HEIGHT) {
-      this.setState({
-        videoWidth:
-          (VIDEO_CONTAINER_HEIGHT * event.naturalSize.width) /
-          event.naturalSize.height,
-        videoHeight: VIDEO_CONTAINER_HEIGHT,
-      });
-    } else {
-      this.setState({
-        videoWidth: DEVICE_WIDTH,
-        videoHeight:
-          (DEVICE_WIDTH * event.naturalSize.height) / event.naturalSize.width,
-      });
-    }
-  };
-
-  _onFullscreenUpdate = (event) => {
-    console.log(
-      `FULLSCREEN UPDATE : ${JSON.stringify(event.fullscreenUpdate)}`
-    );
+    
   };
 
   _advanceIndex(forward) {
-    this.index = (this.index + (forward ? 1 : playlistData.songs.length - 1)) % playlistData.songs.length;
+    this.index = (this.index + (forward ? 1 : this.state.music.length - 1)) % this.state.music.length;
   }
 
   async _updatePlaybackInstanceForIndex(playing) {
     this._updateScreenForLoading(true);
-
-    this.setState({
-      videoWidth: DEVICE_WIDTH,
-      videoHeight: VIDEO_CONTAINER_HEIGHT,
-    });
-
     this._loadNewPlaybackInstance(playing);
   }
 
@@ -284,7 +238,7 @@ class MusicScreen extends React.Component {
       } else if (this.state.loopingType == 0) {
         loopingType = 'enable'
       }
-      let toast = Toast.show('Repeat current music ' + loopingType, {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
+      let toast = Toast.show('Repeat current this.state.music ' + loopingType, {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
     }
   };
 
@@ -352,7 +306,7 @@ class MusicScreen extends React.Component {
   }
 
   _shuffle() {
-    this.shuffle(playlistData.songs)
+    this.shuffle(this.state.music)
     this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
     let toast = Toast.show('Shuffled playlist', {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
   }
@@ -376,9 +330,10 @@ class MusicScreen extends React.Component {
 
   render() {
     const { navigation } = this.props;
-    // console.log(this.props.route.params.form)
+
     const onBackButton = () => {
       const params = this.props.route.params
+      // this._onStopPressed
       navigation.navigate( params.from, 
         {
           from: params.from_parent, 
@@ -386,6 +341,7 @@ class MusicScreen extends React.Component {
           id:  params.from_id
         })
     }
+      
     return (
       <SafeAreaView style={styles.container}>
 
@@ -404,24 +360,24 @@ class MusicScreen extends React.Component {
             onPress={() => onBackButton()}>
             <MaterialIcons style={{textAlign: 'left'}} name="keyboard-arrow-left" size={32} color="white" />
           </TouchableOpacity>
-          <Text style={{fontSize: 24, color: 'white'}} numberOfLines={1}>{playlistData.name}</Text>
+          <Text style={{fontSize: 24, color: 'white'}} numberOfLines={1}>{this.state.playlistname}</Text>
           <Text style={{fontSize: 18, color: 'white'}}></Text>
         </View>
         {/* Music Image */}
         <View style={{height: '50%', backgroundColor: 'red'}}>
-          <Image style={{height: '100%', width: '100%'}} source={{ uri: playlistData.songs[this.index].image}}/>
+          <Image style={{height: '100%', width: '100%'}} source={{ uri: this.state.music[this.index].image}}/>
           <Video
             ref={this._mountVideo}
             onPlaybackStatusUpdate={this._onPlaybackStatusUpdate}
-            onLoadStart={this._onLoadStart}
-            onLoad={this._onLoad}
-            onError={this._onError}
+            onLoadStart={()=> console.log(`ON LOAD START`)}
+            onLoad={(status) => console.log(`ON LOAD : ${JSON.stringify(status)}`)}
+            onError={(error) => console.log(`ON ERROR : ${error}`)}
           />
         </View>
         {/* Music Info */}
         <View style={{height: '10%', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}} numberOfLines={1}>{playlistData.songs[this.index].name}</Text>
-          <Text style={{fontSize: 18, color: 'white'}} numberOfLines={1}>{playlistData.songs[this.index].artist}</Text>
+          <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}} numberOfLines={1}>{this.state.music[this.index].name}</Text>
+          <Text style={{fontSize: 18, color: 'white'}} numberOfLines={1}>{this.state.music[this.index].artist}</Text>
         </View>
         {/* Music Track */}
         <View style={{height: '10%', flexDirection: 'column'}}>
