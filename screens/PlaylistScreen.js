@@ -170,6 +170,10 @@ export default function PlaylistScreen ({route}) {
     setIsLoading(false)
   }
 
+  const getNumber = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
   const onClickMusic = (music_idx) => {
     navigation.navigate('MusicScreen', 
       {
@@ -309,6 +313,3 @@ const styles = StyleSheet.create({
   }
 });
 
-function getNumber(x) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
