@@ -2,10 +2,10 @@ import firebaseApp from './Connect';
 import 'firebase/firestore';
 
 const DB = firebaseApp.firestore();
-const userCollumn = DB.collection('user');
+const userColl = DB.collection('user');
 
 export const addUser = (key, success) => {
-  const docRef = userCollumn
+  const docRef = userColl
     .add(key)
       .then((user) => {
         // console.log(acc)
@@ -17,7 +17,7 @@ export const addUser = (key, success) => {
 }
 
 export const getUserByKey = (key, success) => {
-  const docRef = userCollumn
+  const docRef = userColl
     .get()
       .then((res) => {
         var temp = res.filter(user => user.data().key == key);
