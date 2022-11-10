@@ -1,15 +1,18 @@
 import {firebase} from './Connect';
 import 'firebase/firestore';
-import { doc, query, collection, where, getDocs } from "firebase/firestore";
+import { doc, query, collection, where, getDocs, setDoc, updateDoc  } from "firebase/firestore";
 import { disableExpoCliLogging } from 'expo/build/logs/Logs';
 
 const DB = firebase.firestore();
 const artistColl    = DB.collection('artist');
 const musicColl     = DB.collection('music');
 const playlistColl  = DB.collection('playlist');
+const playlistOfficialColl = DB.collection('playlistOfficial');
+const testColl  = DB.collection('test');
 
-export const addMusic = (data, success) => {
-  musicColl
+// ADD DATA
+export const addData = (data, success) => {
+  playlistOfficialColl
     .add(data)
       .then((data) => {
         return success(true)
@@ -18,20 +21,71 @@ export const addMusic = (data, success) => {
         console.error(err)
       })
 }
+// change string to int
+export const changeType = () => {
+  playlistOfficialColl.get()
+    .then((snapshot) => {
+      snapshot.forEach((mydoc) => {
+        // console.log(doc.id)
+        var int_like = parseInt(mydoc.data().like)
+        var int_view = parseInt(mydoc.data().view)
+        console.log( int_like + ' ' +int_view)
+        var data = {
+          like : int_like,
+          view : int_view
+        }
+        // const docRef = doc(DB, 'music', doc.id)
+        setDoc(doc(DB, "playlistOfficial", mydoc.id), data, { merge: true });
+      });
+    })
+}
 
+export const getPopularPlaylist = (success) => {
+  playlistColl.orderBy("view", "desc").get()
+    .then((snapshot) => {
+      var playlistData = []
+      snapshot.forEach((doc) => {
+        var playlist = doc.data()
+        playlist.id  = doc.id
+        playlistData.push(playlist)
+      })
+      return success(playlistData)
+    })
+    .catch((err) => {
+      console.error('Cannot get Playlist data')
+    })
+}
+export const getPopularPlaylistOfficial = (success) => {
+  playlistOfficialColl.orderBy("view", "desc").get()
+    .then((snapshot) => {
+      var playlistData = []
+      snapshot.forEach((doc) => {
+        var playlist = doc.data()
+        playlist.id  = doc.id
+        playlistData.push(playlist)
+      })
+      return success(playlistData)
+    })
+    .catch((err) => {
+      console.error('Cannot get Playlist Official data', err)
+    })
+}
 export const getPopularArtist = (success) => {
   artistColl.orderBy("follower", "desc").get()
     .then((snapshot) => {
       var artistData = []
       snapshot.forEach((doc) => {
-        var artist = doc.data()
-        artist.id  = doc.id
-        artistData.push(artist)
+        // filter out podcast artist
+        if (doc.data().podcast == null) {
+          var artist = doc.data()
+          artist.id  = doc.id
+          artistData.push(artist)
+        }
       })
       return success(artistData)
     })
     .catch((err) => {
-      console.error('Cannot get Artist data')
+      console.error('Cannot get Artist data', err)
     })
 }
 
