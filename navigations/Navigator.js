@@ -57,7 +57,7 @@ export const Navigator = () => {
         <Stack.Screen name="LibraryScreen"  component={LibraryScreen} />
         <Stack.Screen name="SettingScreen"  component={SettingScreen} />
 
-        <Stack.Screen name="MusicScreen"    component={MusicScreen} />
+        <Stack.Screen name="MusicScreen"    component={MusicScreen} detachInactiveScreens={true}/>
         <Stack.Screen name="PlaylistScreen" component={PlaylistScreen} />
       </Stack.Navigator>
 

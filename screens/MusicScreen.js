@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Dimensions, Image, StyleSheet, Text, SafeAreaView, TouchableOpacity, View, } from "react-native";
 import { Asset } from "expo-asset";
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS, ResizeMode, Video, } from "expo-av";
@@ -13,45 +13,18 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 const LOADING_STRING = "... loading ...";
 const BUFFERING_STRING = "...buffering...";
 
-export default function(props) {
+export default function MusicScreen({route}) {
   const navigation = useNavigation();
 
-  return <MusicScreen {...props} navigation={navigation} />;
-}
+  const [title, setTitle] = useState(route.params.title ? route.params.title : '')
+  const [music, setMusic] = useState(route.params.music)
+  const [index, setIndex] = useState(route.params.music_idx)
+  
+  const video               = useRef(null);
+  const [status, setStatus] = useState({});
+  const [originStatus, setOriginStatus] = useState(null);
 
-class MusicScreen extends React.Component {
-
-  constructor(props) {
-    super(props);
-    this.index = this.props.route.params.music_idx;
-    this.isSeeking = false;
-    this.shouldPlayAtEndOfSeek = false;
-    this.playbackInstance = null;
-    this.state = {
-      playlistname : '',
-      music : this.props.route.params.music,
-      playbackInstanceName: LOADING_STRING,
-      loopingType: 0,
-      muted: false,
-      playbackInstancePosition: null,
-      playbackInstanceDuration: null,
-      shouldPlay: false,
-      isPlaying: false,
-      isBuffering: false,
-      isLoading: true,
-      shouldCorrectPitch: true,
-      volume: 1.0,
-      rate: 1.0,
-      poster: false,
-      useNativeControls: false,
-      fullscreen: false,
-      throughEarpiece: false,
-    };
-  }
-
-  componentDidMount() {
-    console.log('componentDidMount')
-
+  useEffect(() => {
     try {
       Audio.setAudioModeAsync({
         allowsRecordingIOS: false,
@@ -62,291 +35,95 @@ class MusicScreen extends React.Component {
         interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
         playThroughEarpieceAndroid: false,
       });
-      // console.log(this.state.music)
     } catch (error) {
       console.error(error)
     }
-  }
+  }, [])
 
-  async _loadNewPlaybackInstance(playing) {
-
-    try {
-      console.log('loadNewPlayback')
-      if (this.playbackInstance != null) {
-        console.log('playback not null unload it')
-
-        await this.playbackInstance.unloadAsync();
-        // this.playbackInstance.setOnPlaybackStatusUpdate(null);
-        this.playbackInstance = null;
-      }
-      this.playbackInstance = null;
-
-      const source = { uri: this.state.music[this.index].uri };
-      const initialStatus = {
-        progressUpdateIntervalMillis: 500,
-        shouldPlay: playing,
-        rate: this.state.rate,
-        shouldCorrectPitch: this.state.shouldCorrectPitch,
-        volume: this.state.volume,
-        isMuted: this.state.muted,
-        isLooping: this.state.loopingType === 1,
-      };
-      console.log('create Asynch')
-
-      const { sound, status } = await Audio.Sound.createAsync(
-        source,
-        initialStatus,
-        this._onPlaybackStatusUpdate
-      );
-      console.log('cast')
-
-      this.playbackInstance = sound;
-      console.log('false')
-
-      this._updateScreenForLoading(false);
-    } catch (error) {
-      console.error(error)
-    }
-    
-  }
-
-  _mountVideo = (component) => {
-    console.log('_mountVideo')
-    this._video = component;
-    this._loadNewPlaybackInstance(false);
-  };
-
-  _updateScreenForLoading(isLoading) {
-    console.log('_updateScreenForLoading')
-    if (isLoading) {
-      this.setState({
-        isPlaying: false,
-        playbackInstanceName: LOADING_STRING,
-        playbackInstanceDuration: null,
-        playbackInstancePosition: null,
-        isLoading: true,
-      });
-    } else {
-      this.setState({
-        playbackInstanceName: this.state.playlistname,
-        isLoading: false,
-      });
-    }
-  }
-
-  _onPlaybackStatusUpdate = (status) => {
-    try {
-      if (status.isLoaded) {
-        console.log("playback was loading")
-        this.setState({
-          playbackInstancePosition: status.positionMillis,
-          playbackInstanceDuration: status.durationMillis,
-          shouldPlay: status.shouldPlay,
-          isPlaying: status.isPlaying,
-          isBuffering: status.isBuffering,
-          rate: status.rate,
-          muted: status.isMuted,
-          volume: status.volume,
-          loopingType: status.isLooping ? 1 : 0,
-          shouldCorrectPitch: status.shouldCorrectPitch,
-        });
-        if (status.didJustFinish && !status.isLooping) {
-          console.log('status.didJustFinish && !status.isLooping')
-          this._advanceIndex(true);
-          this._updatePlaybackInstanceForIndex(true);
-        }
-      } else {
-        console.log("playback error")
-        if (status.error) {
-          console.log(`FATAL PLAYER ERROR: ${status.error}`);
-        }
-      }
-    } catch (error) {
-      try {
-        Audio.setAudioModeAsync({
-          allowsRecordingIOS: false,
-          staysActiveInBackground: true,
-          interruptionModeIOS: InterruptionModeIOS.DuckOthers,
-          playsInSilentModeIOS: true,
-          shouldDuckAndroid: true,
-          interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
-          playThroughEarpieceAndroid: false,
-        });
-        // console.log(this.state.music)
-      } catch (error) {
-        console.error(error)
-      }
-      console.error(error)
-    }
-    
-  };
-
-  _advanceIndex(forward) {
-    this.index = (this.index + (forward ? 1 : this.state.music.length - 1)) % this.state.music.length;
-  }
-
-  async _updatePlaybackInstanceForIndex(playing) {
-    this._updateScreenForLoading(true);
-    this._loadNewPlaybackInstance(playing);
-  }
-
-  _onPlayPausePressed = () => {
-    if (this.playbackInstance != null) {
-      if (this.state.isPlaying) {
-        this.playbackInstance.pauseAsync();
-      } else {
-        this.playbackInstance.playAsync();
-      }
-    }
-  };
-
-  _onStopPressed = () => {
-    if (this.playbackInstance != null) {
-      this.playbackInstance.stopAsync();
-    }
-  };
-
-  _onForwardPressed = () => {
-    if (this.playbackInstance != null) {
-      this._advanceIndex(true);
-      this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
-    }
-  };
-
-  _onBackPressed = () => {
-    if (this.playbackInstance != null) {
-      this._advanceIndex(false);
-      this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
-    }
-  };
-
-  _onMutePressed = () => {
-    if (this.playbackInstance != null) {
-      this.playbackInstance.setIsMutedAsync(!this.state.muted);
-    }
-  };
-
-  _onLoopPressed = () => {
-    
-    if (this.playbackInstance != null) {
-      this.playbackInstance.setIsLoopingAsync(
-        this.state.loopingType !== 1
-      );
-      var loopingType;
-      if (this.state.loopingType == 1) {
-        loopingType = 'disable'
-      } else if (this.state.loopingType == 0) {
-        loopingType = 'enable'
-      }
-      let toast = Toast.show('Repeat current this.state.music ' + loopingType, {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
-    }
-  };
-
-  _onSeekSliderValueChange = (value) => {
-    if (this.playbackInstance != null && !this.isSeeking) {
-      this.isSeeking = true;
-      this.shouldPlayAtEndOfSeek = this.state.shouldPlay;
-      this.playbackInstance.pauseAsync();
-      this.playbackInstance.playAsync();
-    }
-  };
-
-  _onSeekSliderSlidingComplete = async (value) => {
-    if (this.playbackInstance != null) {
-      this.isSeeking = false;
-      const seekPosition = value * this.state.playbackInstanceDuration;
-      if (this.shouldPlayAtEndOfSeek) {
-        this.playbackInstance.playFromPositionAsync(seekPosition);
-      } else {
-        this.playbackInstance.setPositionAsync(seekPosition);
-      }
-    }
-  };
-
-  _getSeekSliderPosition() {
-    if (
-      this.playbackInstance != null &&
-      this.state.playbackInstancePosition != null &&
-      this.state.playbackInstanceDuration != null
-    ) {
-      return (
-        this.state.playbackInstancePosition /
-        this.state.playbackInstanceDuration
-      );
+  const seekPosition = () => {
+    // console.log(status.positionMillis / status.durationMillis)
+    // console.log(status.durationMillis)
+    if ( video != null && status.positionMillis != null && status.durationMillis != null ) {
+      return ( status.positionMillis / status.durationMillis );
     }
     return 0;
   }
-
-  _getMMSSFromMillis(millis) {
-    const totalSeconds = millis / 1000;
-    const seconds = Math.floor(totalSeconds % 60);
-    const minutes = Math.floor(totalSeconds / 60);
-
-    const padWithZero = (number) => {
-      const string = number.toString();
-      if (number < 10) {
-        return "0" + string;
-      }
-      return string;
-    };
-    return padWithZero(minutes) + ":" + padWithZero(seconds);
-  }
-
-  _getTimestamp() {
-    if (
-      this.playbackInstance != null &&
-      this.state.playbackInstancePosition != null &&
-      this.state.playbackInstanceDuration != null
-    ) {
-      return `${this._getMMSSFromMillis(
-        this.state.playbackInstancePosition
-      )} / ${this._getMMSSFromMillis(this.state.playbackInstanceDuration)}`;
+  const seekComplete = (value) => {
+    if (video != null) {
+      var newSeekPos = value * status.durationMillis
+      // console.log(newSeekPos)
+      video.current.setStatusAsync({positionMillis: newSeekPos})
     }
-    return "";
   }
 
-  _shuffle() {
-    this.shuffle(this.state.music)
-    this._updatePlaybackInstanceForIndex(this.state.shouldPlay);
+  const onBackward = () => {
+    if (trackIndex !== 0) {
+      setIndex(index-1)
+    } else {
+      setIndex(music.length()-1)
+    }
+  }
+  const onForward = () => {
+    if (trackIndex !== music.length()-1) {
+      setIndex(index+1)
+    } else {
+      setIndex(0)
+    }
+  }
+  const onShuffle = () => {
+    const shuffle = (array) => {
+      let currentIndex = array.length,  randomIndex;
+      while (currentIndex != 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [
+          array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+    var newMusicList = shuffle(music)
+    setMusic(newMusicList)
+    video.current.pauseAsync()
+    video.current.setStatusAsync(originStatus)
+    video.current.setStatusAsync({source: { uri: music[index].uri }})
+    video.current.playAsync()
     let toast = Toast.show('Shuffled playlist', {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
   }
-  shuffle(array) {
-    let currentIndex = array.length,  randomIndex;
+  // console.log(route.params.music)
+  // console.log(music[index])
+  // setPlaylist(playlist => ({
+  //   ...playlist, 
+  //   ...{
+  //     liked : 5233492,
+  //     label : 'Featuring',
+  //     music : musicFromFirebase
+  //   }
+  // }))
   
-    // While there remain elements to shuffle.
-    while (currentIndex != 0) {
-  
-      // Pick a remaining element.
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex--;
-  
-      // And swap it with the current element.
-      [array[currentIndex], array[randomIndex]] = [
-        array[randomIndex], array[currentIndex]];
-    }
-  
-    return array;
+  const onBackButton = () => {
+    const params = route.params
+    navigation.navigate( params.from, {
+      from  : params.from_parent, 
+      type  : params.from_type, 
+      id    :  params.from_id
+    })
   }
 
-  render() {
-    const { navigation } = this.props;
-
-    const onBackButton = () => {
-      const params = this.props.route.params
-      // this._onStopPressed
-      navigation.navigate( params.from, 
-        {
-          from: params.from_parent, 
-          type: params.from_type, 
-          id:  params.from_id
-        })
+  // Utility Function
+  const getPlaytime = () => {
+    const getTimeFormat = (time) => {
+      var minute = String(Math.floor(time/60))
+      var second = String(Math.floor(time%60)).length == 1 ? '0' + String(Math.floor(time%60)) : String(Math.floor(time%60))
+      return  minute + ':' + second
     }
-      
-    return (
-      <SafeAreaView style={styles.container}>
-
+    if ( video != null && status.positionMillis != null && status.durationMillis != null ) {
+      return getTimeFormat(status.positionMillis/1000) + ' / ' + getTimeFormat(status.durationMillis/1000);
+    }
+  }
+  return (
+    <SafeAreaView style={styles.container}>
       {/* Loading Modal */}
-      { this.state.isLoading &&
+      { status.isLoading &&
       <View style={styles.loading}>
         <Text style={{fontSize: 64, color: 'white'}}>Loading...</Text>
       </View>
@@ -360,24 +137,25 @@ class MusicScreen extends React.Component {
             onPress={() => onBackButton()}>
             <MaterialIcons style={{textAlign: 'left'}} name="keyboard-arrow-left" size={32} color="white" />
           </TouchableOpacity>
-          <Text style={{fontSize: 24, color: 'white'}} numberOfLines={1}>{this.state.playlistname}</Text>
+          <Text style={{fontSize: 24, color: 'white'}} numberOfLines={1}>{title}</Text>
           <Text style={{fontSize: 18, color: 'white'}}></Text>
         </View>
         {/* Music Image */}
         <View style={{height: '50%', backgroundColor: 'red'}}>
-          <Image style={{height: '100%', width: '100%'}} source={{ uri: this.state.music[this.index].image}}/>
+          <Image style={{height: '100%', width: '100%'}} source={{ uri: music[index].image}}/>
           <Video
-            ref={this._mountVideo}
-            onPlaybackStatusUpdate={this._onPlaybackStatusUpdate}
+            ref={video}
+            onPlaybackStatusUpdate={status => setStatus(() => status)}
             onLoadStart={()=> console.log(`ON LOAD START`)}
-            onLoad={(status) => console.log(`ON LOAD : ${JSON.stringify(status)}`)}
+            onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)}}}
             onError={(error) => console.log(`ON ERROR : ${error}`)}
+            source={{ uri: music[index].uri }}
           />
         </View>
         {/* Music Info */}
         <View style={{height: '10%', justifyContent: 'center', alignItems: 'center'}}>
-          <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}} numberOfLines={1}>{this.state.music[this.index].name}</Text>
-          <Text style={{fontSize: 18, color: 'white'}} numberOfLines={1}>{this.state.music[this.index].artist}</Text>
+          <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}} numberOfLines={1}>{music[index].name}</Text>
+          <Text style={{fontSize: 18, color: 'white'}} numberOfLines={1}>{music[index].artist}</Text>
         </View>
         {/* Music Track */}
         <View style={{height: '10%', flexDirection: 'column'}}>
@@ -386,29 +164,29 @@ class MusicScreen extends React.Component {
               // style={{backgroundColor: 'white'}}
               // trackImage={ICON_TRACK_1.module}
               // thumbImage={ICON_THUMB_1.module}
-              value={this._getSeekSliderPosition()}
-              onValueChange={this._onSeekSliderValueChange}
-              onSlidingComplete={this._onSeekSliderSlidingComplete}
+              value={seekPosition()}
+              // onValueChange={seekPosition()}
+              onSlidingComplete={value => seekComplete(value)} // when user release thumb (complete)
               minimumTrackTintColor='white'            
               maximumTrackTintColor='white'
               thumbTintColor='#1ED760'
             />
           </View>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            <Text style={{fontSize: 18, color: 'white'}}>{this.state.isBuffering ? BUFFERING_STRING : ""}</Text>
-            <Text style={{fontSize: 18, color: 'white'}}>{this._getTimestamp()}</Text>
+            {/* <Text style={{fontSize: 18, color: 'white'}}>{this.state.isBuffering ? BUFFERING_STRING : ""}</Text> */}
+            <Text style={{fontSize: 18, color: 'white'}}>{getPlaytime()}</Text>
           </View>
         </View>
         {/* Music Panel */}
         <View style={{height: '20%', flexDirection: 'row',justifyContent: 'space-between'}}>
-          <TouchableOpacity onPress={() => this._shuffle()}>
+          <TouchableOpacity onPress={() => onShuffle()}>
             <Ionicons name="shuffle"            size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this._onBackPressed()} >
+          <TouchableOpacity onPress={() => onBackward()} >
             <Ionicons name="play-skip-back"     size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this._onPlayPausePressed()} >
-            { (this.state.isPlaying)? 
+          <TouchableOpacity onPress={() => status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()} >
+            { (status.isPlaying)? 
               <Ionicons name="pause" size={66} color="white" />:
               <Ionicons name="play"  size={66} color="white" />
             }
@@ -416,20 +194,18 @@ class MusicScreen extends React.Component {
           {/* <TouchableOpacity onPress={() => this._onStopPressed()} >
             <Ionicons name="stop" size={66} color="white" />
           </TouchableOpacity> */}
-          <TouchableOpacity onPress={() => this._onForwardPressed()} >
+          <TouchableOpacity onPress={() => onForward()} >
             <Ionicons name="play-skip-forward"  size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => this._onLoopPressed()} >
+          {/* <TouchableOpacity onPress={() => this._onLoopPressed()} >
             { (this.state.loopingType)?
               <Ionicons name="infinite" size={66} color="white" />:
               <Ionicons name="infinite" size={66} color="gray" />}
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </View>
-  
-      </SafeAreaView>
-    );
-  }
+    </SafeAreaView>
+  );
 }
 
 const styles = StyleSheet.create({

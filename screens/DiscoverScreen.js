@@ -4,91 +4,47 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
+import * as MusicsModel from "../firestore/MusicsModel";
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
 
-const podcastsData = [
-  {
-    name: 'The Ghost Radio',
-    image: 'https://i.ytimg.com/vi/lakdbG7ieRs/maxresdefault.jpg'
-  },
-  {
-    name: 'หลอนตามสั่ง',
-    image: 'https://s.isanook.com/jo/0/rp/r/w700/ya0xa0m1w0/aHR0cHM6Ly9qb294LWNtcy1pbWFnZS0xMjUxMzE2MTYxLmZpbGUubXlxY2xvdWQuY29tLzIwMjEvMDkvMjcvNjI3NmM3ZjEtMTIyMy00NWYxLTg3ZTktMjk3N2JiODZkNzI1LmpwZy8xMDAw.jpg'
-  },
-  {
-    name: 'คำนี้ดี',
-    image: 'https://thestandard.co/wp-content/uploads/2018/08/LOGO-KND-1-600x600.jpg?x60466'
-  },
-  {
-    name: 'วันนี้เป็นยังไงบ้าง',
-    image: 'https://images-se-ed.com/ws/Storage/Originals/978616/182/9786161825720L.jpg?h=f1211fc470967b912e9b3c8910feb52e'
-  },
-  {
-    name: 'พูดมาก Podcast',
-    image: 'https://storage.buzzsprout.com/variants/ts1frh5vr11v3esupb7amoleqytv/60854458c4d1acdf4e1c2f79c4137142d85d78e379bdafbd69bd34c85f5819ad.jpg'
-  },
-  {
-    name: 'เพื่อนกันคุยจนดึก',
-    image: 'https://is3-ssl.mzstatic.com/image/thumb/Podcasts112/v4/9b/16/40/9b1640c0-0afa-176b-e610-ee6b097ab141/mza_4794616745179748952.jpg/250x250bb.jpg'
-  },
-  {
-    name: '8 Minute History',
-    image: 'https://thestandard.co/wp-content/uploads/2021/02/logo-minutes-history-600x600.jpg?x60466'
-  },
-  {
-    name: 'The Standard',
-    image: 'https://pbs.twimg.com/profile_images/1371418327726264320/_9XbcEOG_400x400.jpg'
-  },
-  {
-    name: 'พี่อ้อยพี่ฉอด',
-    image: 'https://www.innnews.co.th/wp-content/uploads/2021/08/3F984A73-2023-4A3E-837C-B7064050F5F7.jpeg'
-  },
-  {
-    name: '5 Minutes',
-    image: 'https://i.scdn.co/image/d06cb0c89ef77620e8d96d864866284b70f727ab'
-  }
-]
-
-const browseData = [
-  {
-    name: 'Charts'
-  },
-  {
-    name: 'Artist'
-  },
-  {
-    name: 'Language'
-  },
-  {
-    name: 'Genre'
-  },
-  {
-    name: 'Podcast'
-  },
-  {
-    name: 'Followed'
-  },
-  {
-    name: 'Charts'
-  },
-  {
-    name: 'Artist'
-  },
-  {
-    name: 'Language'
-  }
-]
-const browseRowData = browseData.reduce(function (rows, key, index) { 
-  return (index % 3 == 0 ? rows.push([key]) 
-    : rows[rows.length-1].push(key)) && rows;
-}, []);
-
 export default function DiscoverScreen() {
   const navigation = useNavigation();
   const page = 'discover'
-  const [myText, setMyText] = useState('');
+  const [podcastData, setPodcastData] = useState(null);
+  const [genreData,setGenreData] = useState(null);
+  
+  useEffect(() => {
+    loadPodcast();
+    loadGenre();
+  }, []);
+
+  const loadPodcast = async () => {
+    try {
+      await MusicsModel.getPopularPodcast((res) => {
+        setPodcastData(res);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const loadGenre = async () => {
+    try {
+      await MusicsModel.getPopularGenre((res) => {
+        const browseRowData = res.reduce(function (rows, key, index) {
+          return (
+            (index % 3 == 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) &&
+            rows
+          );
+        }, []);
+        setGenreData(browseRowData);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const renderPodcasts = ({ item }) => (
     <View>
@@ -112,38 +68,38 @@ export default function DiscoverScreen() {
     <View>
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[0].name})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[0]})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 
           start={[0, 1]} end={[1, 0]}
           style={{width: '100%', padding: 20, borderRadius: 10}}
         >
-          <Text style={styles.text}>{item[0].name}</Text>
+          <Text style={styles.text}>{item[0]}</Text>
         </LinearGradient>
       </TouchableOpacity> 
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[1].name})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[1]})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 
           start={[0, 1]} end={[1, 0]}
           style={{width: '100%', padding: 20, borderRadius: 10}}
         >          
-          <Text style={styles.text}>{item[1].name}</Text>
+          <Text style={styles.text}>{item[1]}</Text>
         </LinearGradient>
       </TouchableOpacity> 
       <TouchableOpacity 
         style={styles.browseItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[2].name})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[2]})}
       >
         <LinearGradient 
           colors={[randomColor(), randomColor()]} 
           start={[0, 1]} end={[1, 0]}
           style={{width: '100%', padding: 20, borderRadius: 10}}
         >          
-          <Text style={styles.text}>{item[2].name}</Text>
+          <Text style={styles.text}>{item[2]}</Text>
         </LinearGradient>
       </TouchableOpacity> 
     </View>
@@ -170,7 +126,7 @@ export default function DiscoverScreen() {
           <FlatList
             horizontal={true} 
             style={styles.podcastsScroll}
-            data={podcastsData}
+            data={podcastData}
             renderItem={renderPodcasts}
             // keyExtractor={(playlist) => playlist.id}
           />
@@ -184,7 +140,7 @@ export default function DiscoverScreen() {
           <FlatList
             horizontal={true} 
             style={styles.browseScroll}
-            data={browseRowData}
+            data={genreData}
             renderItem={renderBrowse}
             // keyExtractor={(playlist) => playlist.id}
           />

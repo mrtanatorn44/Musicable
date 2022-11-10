@@ -7,12 +7,11 @@ const DB = firebase.firestore();
 const artistColl    = DB.collection('artist');
 const musicColl     = DB.collection('music');
 const playlistColl  = DB.collection('playlist');
-const playlistOfficialColl = DB.collection('playlistOfficial');
 const testColl  = DB.collection('test');
 
 // ADD DATA
 export const addData = (data, success) => {
-  playlistOfficialColl
+  playlistColl
     .add(data)
       .then((data) => {
         return success(true)
@@ -23,7 +22,7 @@ export const addData = (data, success) => {
 }
 // change string to int
 export const changeType = () => {
-  playlistOfficialColl.get()
+  playlistColl.get()
     .then((snapshot) => {
       snapshot.forEach((mydoc) => {
         // console.log(doc.id)
@@ -45,9 +44,11 @@ export const getPopularPlaylist = (success) => {
     .then((snapshot) => {
       var playlistData = []
       snapshot.forEach((doc) => {
-        var playlist = doc.data()
-        playlist.id  = doc.id
-        playlistData.push(playlist)
+        if (doc.data().official == null) {
+          var playlist = doc.data()
+          playlist.id  = doc.id
+          playlistData.push(playlist)
+        }
       })
       return success(playlistData)
     })
@@ -56,13 +57,15 @@ export const getPopularPlaylist = (success) => {
     })
 }
 export const getPopularPlaylistOfficial = (success) => {
-  playlistOfficialColl.orderBy("view", "desc").get()
+  playlistColl.orderBy("view", "desc").get()
     .then((snapshot) => {
       var playlistData = []
       snapshot.forEach((doc) => {
-        var playlist = doc.data()
-        playlist.id  = doc.id
-        playlistData.push(playlist)
+        if (doc.data().official == true) {
+          var playlist = doc.data()
+          playlist.id  = doc.id
+          playlistData.push(playlist)
+        }
       })
       return success(playlistData)
     })
@@ -89,11 +92,11 @@ export const getPopularArtist = (success) => {
     })
 }
 
-export const getArtist = (artist_id, success) => {
+export const getArtist = (artist_name, success) => {
   artistColl.get()
     .then((snapshot) => {
       snapshot.forEach((doc) => {
-        if (doc.id == artist_id) {
+        if (doc.id == artist_name) {
           // console.log(doc.id)
           return success(doc.data())
         }
@@ -104,9 +107,8 @@ export const getArtist = (artist_id, success) => {
     })
 }
 
-export const getMusicFromArtist = (artist_id, success) => {
-  const artistDocRef = doc(DB, 'artist', artist_id)
-  musicColl.where("artist", "==", artistDocRef).get()
+export const getMusicFromArtist = (artist_name, success) => {
+  musicColl.where("artist", "==", artist_name).get()
     .then((snapshot) => {
       var musicData = []
       snapshot.forEach((doc) => {
@@ -139,21 +141,58 @@ export const getMusicTest = () => {
     })
 }
 
-// export const updatePosByKey = (data, success) => {
-//   const docRef = accountColl
-//     .doc(data.id)
-//       .update(
-//         {
-//           realtime_pos : {
-//             lat: data.lat,
-//             long: data.long
-//           }
-//         }
-//       )
-//         .then((res) => {
-//           success(true)
-//         })
-//         .catch((err) => {
-//           console.error(err)
-//         })
-// }
+export const getPopularPodcast = (success) => {
+  artistColl.orderBy("follower", "desc").get()
+    .then((snapshot) => {
+      var podcastData = [];
+      snapshot.forEach((doc) => {
+        // filter out podcast artist
+        if (doc.data().podcast == true) {
+          var artist = doc.data();
+          artist.id = doc.id;
+          podcastData.push(artist);
+        }
+      });
+      return success(podcastData);
+    })
+    .catch((err) => {
+      console.error("Cannot get Artist data", err);
+    });
+};
+
+export const getPodcast = (artist_name, success) => {
+  artistColl
+    .get()
+    .then((snapshot) => {
+      snapshot.forEach((doc) => {
+        if (doc.id == artist_name) {
+          // console.log(doc.id)
+          return success(doc.data());
+        }
+      });
+    })
+    .catch((err) => {
+      console.error("Cannot get Artist data");
+    });
+};
+
+export const getPodcastFromArtist = (artist_name, success) => {
+  podcastColl.where("artist", "==", artist_name).get().then((snapshot) => {
+      var podcastData2 = [];
+      snapshot.forEach((doc) => {
+        podcastData2.push({
+          id: doc.data().id,
+          name: doc.data().name,
+          image: doc.data().image,
+          uri: doc.data().url,
+          genre: doc.data().genre,
+          like: doc.data().like,
+          view: doc.data().view,
+        });
+      });
+      return success(podcastData2);
+    })
+    .catch((err) => {
+      console.error("Cannot");
+    });
+};

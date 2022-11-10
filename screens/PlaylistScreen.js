@@ -136,20 +136,30 @@ export default function PlaylistScreen ({route}) {
         })
         
     } else if (route.params.type == 'podcast') { 
-      // type, artist_id
-      // firebase.getPlaylistFromUserLiked(route.params.id)
-
-      // After get data from firebase set in state
-      setPlaylist(playlist => ({
-        ...playlist, 
-        ...{
-          title : route.params.type + ' ' + route.params.id,
-          liked : 5233492,
-          image : 'https://miro.medium.com/max/1400/1*FyAXv_iWwamsNRfSjhMzUQ.jpeg',
-          label : 'Sorted Episode',
-          music : musicFromFirebase
-        }
-      }))
+      // get Podcast data
+      await MusicsModel.getPodcast(route.params.id, (podcastData) => {
+        setPlaylist(playlist => ({
+          ...playlist, 
+          ...{
+            title : podcastData.name,
+            liked : podcastData.follower,
+            image : podcastData.image,
+            label : 'Episode',
+          }
+        }))
+        // get Podcast data
+        MusicsModel.getPodcastFromArtist(route.params.id, (podcastData2) => {
+          podcastData2.forEach(element => {
+            element.artist = podcastData.name
+          });
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              music : podcastData2 
+            }
+          }))
+        })
+      })
     } else if (route.params.type == 'playlist') { 
       // type, playlist_id
       // firebase.getPlaylistFromID(route.params.id)
