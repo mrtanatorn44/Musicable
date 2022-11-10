@@ -4,10 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons, MaterialIcons } from '@expo/vector-icons'; 
 import { firebase } from "../firestore/Connect";
+import * as MusicsModel from '../firestore/MusicsModel'
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
-
 
 const musicFromFirebase = [
   {
@@ -74,11 +74,11 @@ export default function PlaylistScreen ({route}) {
 
   useEffect(() => {
     if (isLoading) {
-      loadPlaylistData()
+      loadMusic()
     }
   }, [])
 
-  const loadPlaylistData = () => {
+  const loadMusic = async () => {
     if (route.params.type == 'genre') {
       // type, key
       // firebase.getPlaylistFromGenre(route.params.type)
@@ -110,20 +110,31 @@ export default function PlaylistScreen ({route}) {
         }
       }))
     } else if (route.params.type == 'artist') { 
-      // type, artist_id
-      // firebase.getPlaylistFromUserLiked(route.params.id)
-
-      // After get data from firebase set in state
-      setPlaylist(playlist => ({
-        ...playlist, 
-        ...{
-          title : route.params.type + ' ' + route.params.id,
-          liked : 5233492,
-          image : 'https://miro.medium.com/max/1400/1*FyAXv_iWwamsNRfSjhMzUQ.jpeg',
-          label : 'Popular Release',
-          music : musicFromFirebase
-        }
-      }))
+        // get Artist data
+        await MusicsModel.getArtist(route.params.id, (artistData) => {
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              title : artistData.name,
+              liked : artistData.follower,
+              image : artistData.image,
+              label : 'Popular Release',
+            }
+          }))
+          // get Music data
+          MusicsModel.getMusicFromArtist(route.params.id, (musicData) => {
+            musicData.forEach(element => {
+              element.artist = artistData.name
+            });
+            setPlaylist(playlist => ({
+              ...playlist, 
+              ...{
+                music : musicData 
+              }
+            }))
+          })
+        })
+        
     } else if (route.params.type == 'podcast') { 
       // type, artist_id
       // firebase.getPlaylistFromUserLiked(route.params.id)
@@ -159,21 +170,22 @@ export default function PlaylistScreen ({route}) {
     setIsLoading(false)
   }
 
-  const onMusicScreen = (music_id) => {
+  const onClickMusic = (music_idx) => {
     navigation.navigate('MusicScreen', 
       {
-        from: 'PlaylistScreen', 
-        from_id: route.params.id,
-        from_type: route.params.type,
-        id: 'MKk32Ljkjkm3' // music_id
+        from      : 'PlaylistScreen', 
+        from_id   : route.params.id,
+        from_type : route.params.type,
+        music     : playlist.music,
+        music_idx : music_idx,
       }
     )
   }
 
-  const renderMusic = ({ item }) => (
+  const renderMusic = ({ item, index}) => (
     <View style={styles.musicItem}>
       <TouchableOpacity style={{width: '90%', height: '100%', flexDirection: 'row'}} 
-        onPress={() => onMusicScreen(item.id)}>
+        onPress={() => onClickMusic(index)}>
         <Image
           style={{height: '100%', aspectRatio: 1, borderRadius: 20}}
           source={{ uri: item.image}}
@@ -210,7 +222,9 @@ export default function PlaylistScreen ({route}) {
             {/* Name */}
             <Text style={{fontSize: 50, fontWeight: 'bold',color: 'white'}} numberOfLines={1}>{playlist.title}</Text>
             {/* Liked */}
-            <Text style={{fontSize: 18, color: 'lightgray'}}><Octicons name="heart-fill" size={18} color="lightgray" /> {getNumber(playlist.liked)} likes</Text>
+            <Text style={{fontSize: 18, color: 'lightgray'}}><Octicons name="heart-fill" size={18} color="lightgray" />
+              { ' ' + getNumber(playlist.liked)} {route.params.type == 'artist' ? 'Followers' : 'likes'}
+            </Text>
           </View>
         </View>
 
