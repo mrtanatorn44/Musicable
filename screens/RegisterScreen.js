@@ -20,7 +20,7 @@ export default function RegisterScreen({ navigation }) {
           .auth()
           .currentUser.sendEmailVerification({
             handleCodeInApp: true,
-            url: "https://musicable-a8ed7.firebaseapp.com",
+            url: "https://mobile-week09-265cb.firebaseapp.com",
           })
           .then(() => {
             alert("Verification email sent");
@@ -121,11 +121,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 700,
     width: "100%",
-    marginVertical: 250,
     paddingTop: 20,
     alignItems: "center",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    position:'absolute',
+    bottom: -200
   },
   input: {
     color: "black",

@@ -113,11 +113,12 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     height: 700,
     width: "100%",
-    marginVertical: 250,
     paddingTop: 20,
     alignItems: "center",
     borderTopLeftRadius: 30,
     borderTopRightRadius: 30,
+    position:'absolute',
+    bottom: -200
   },
   input: {
     color: "black",

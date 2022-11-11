@@ -7,8 +7,17 @@ import Slider from "@react-native-community/slider";
 import Toast from 'react-native-root-toast';
 import { useNavigation } from '@react-navigation/native';
 import * as MusicsModel from '../firestore/MusicsModel'
+import * as Notifications from 'expo-notifications';
 
 import { MaterialIcons, Ionicons } from '@expo/vector-icons'; 
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: false,
+    shouldSetBadge: false,
+  }),
+});
 
 const LOADING_STRING = "... loading ...";
 const BUFFERING_STRING = "...buffering...";
@@ -24,6 +33,11 @@ export default function MusicScreen({route}) {
   const [status, setStatus] = useState({});
   const [originStatus, setOriginStatus] = useState(null);
 
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
+
   useEffect(() => {
     try {
       Audio.setAudioModeAsync({
@@ -35,6 +49,22 @@ export default function MusicScreen({route}) {
         interruptionModeAndroid: InterruptionModeIOS.DuckOthers,
         playThroughEarpieceAndroid: false,
       });
+
+      // noti
+      registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+        setNotification(notification);
+      });
+
+      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+        console.log(response);
+      });
+
+      return () => {
+        Notifications.removeNotificationSubscription(notificationListener.current);
+        Notifications.removeNotificationSubscription(responseListener.current);
+      };
     } catch (error) {
       console.error(error)
     }
@@ -175,7 +205,10 @@ export default function MusicScreen({route}) {
             ref={video}
             onPlaybackStatusUpdate={status => onStatusUpdate(status)}
             onLoadStart={()=> console.log(`ON LOAD START`)}
-            onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)}}}
+            onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)};
+            async () => {
+              await schedulePushNotification();
+            }}}
             onError={(error) => console.log(`ON ERROR : ${error}`)}
             source={{ uri: music[index].uri }}
           />
@@ -234,6 +267,49 @@ export default function MusicScreen({route}) {
       </View>
     </SafeAreaView>
   );
+}
+
+async function schedulePushNotification() {
+  await Notifications.scheduleNotificationAsync({
+    content: {
+      title: "You've got mail! 📬",
+      body: 'Here is the notification body',
+      data: { data: 'goes here' },
+    },
+    trigger: { seconds: 2 },
+  });
+}
+
+async function registerForPushNotificationsAsync() {
+  let token;
+
+  if (Platform.OS === 'android') {
+    await Notifications.setNotificationChannelAsync('default', {
+      name: 'default',
+      importance: Notifications.AndroidImportance.MAX,
+      vibrationPattern: [0, 250, 250, 250],
+      lightColor: '#FF231F7C',
+    });
+  }
+
+  if (Device.isDevice) {
+    const { status: existingStatus } = await Notifications.getPermissionsAsync();
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+      const { status } = await Notifications.requestPermissionsAsync();
+      finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+      alert('Failed to get push token for push notification!');
+      return;
+    }
+    token = (await Notifications.getExpoPushTokenAsync()).data;
+    console.log(token);
+  } else {
+    alert('Must use physical device for Push Notifications');
+  }
+
+  return token;
 }
 
 const styles = StyleSheet.create({
