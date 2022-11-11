@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Dimensions, Image, StyleSheet, Text, SafeAreaView, TouchableOpacity, View, } from "react-native";
+import { Dimensions, Image, StyleSheet, Text, SafeAreaView, TouchableOpacity, View, Platform } from "react-native";
 import { Asset } from "expo-asset";
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS, ResizeMode, Video, } from "expo-av";
 import * as Font from "expo-font";
@@ -7,6 +7,7 @@ import Slider from "@react-native-community/slider";
 import Toast from 'react-native-root-toast';
 import { useNavigation } from '@react-navigation/native';
 import * as MusicsModel from '../firestore/MusicsModel'
+import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 
 import { MaterialIcons, Ionicons } from '@expo/vector-icons'; 
@@ -14,7 +15,7 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
     shouldShowAlert: true,
-    shouldPlaySound: false,
+    shouldPlaySound: true,
     shouldSetBadge: false,
   }),
 });
@@ -56,7 +57,6 @@ export default function MusicScreen({route}) {
       notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
         setNotification(notification);
       });
-
       responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
         console.log(response);
       });
@@ -166,6 +166,15 @@ export default function MusicScreen({route}) {
     setStatus(vidStatus)
    
   }
+
+  const onPlayPress = async() => {
+    status.isPlaying ? 
+    video.current.pauseAsync() : 
+    video.current.playAsync()
+    await schedulePushNotification();
+    // await schedulePushNotification();
+
+  }
   // Utility Function
   const getPlaytime = () => {
     const getTimeFormat = (time) => {
@@ -186,6 +195,19 @@ export default function MusicScreen({route}) {
         <Text style={{fontSize: 64, color: 'white'}}>Loading...</Text>
       </View>
       }
+      {/* <Text>Your expo push token: {expoPushToken}</Text> */}
+      {/* <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Title: {notification && notification.request.content.title} </Text>
+        <Text>Body: {notification && notification.request.content.body}</Text>
+        <Text>Data: {notification && JSON.stringify(notification.request.content.data)}</Text>
+      </View>
+      <TouchableOpacity
+        title="Press to schedule a notification"
+        onPress={async () => {
+          await schedulePushNotification();
+        }}
+      > */}
+        {/* <Text>sdfgsdgsdgsdg</Text></TouchableOpacity> */}
       {/* CONTENT */}
       <View style={styles.content}>
         {/* Top Panel */}
@@ -204,11 +226,8 @@ export default function MusicScreen({route}) {
           <Video
             ref={video}
             onPlaybackStatusUpdate={status => onStatusUpdate(status)}
-            onLoadStart={()=> console.log(`ON LOAD START`)}
-            onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)};
-            async () => {
-              await schedulePushNotification();
-            }}}
+            onLoadStart={()=> {console.log(`ON LOAD START`);}}
+            onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)};}}
             onError={(error) => console.log(`ON ERROR : ${error}`)}
             source={{ uri: music[index].uri }}
           />
@@ -246,7 +265,7 @@ export default function MusicScreen({route}) {
           <TouchableOpacity onPress={() => onBackward()} >
             <Ionicons name="play-skip-back"     size={66} color="white" />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => status.isPlaying ? video.current.pauseAsync() : video.current.playAsync()} >
+          <TouchableOpacity onPress={() => onPlayPress()} >
             { (status.isPlaying)? 
               <Ionicons name="pause" size={66} color="white" />:
               <Ionicons name="play"  size={66} color="white" />
@@ -267,50 +286,55 @@ export default function MusicScreen({route}) {
       </View>
     </SafeAreaView>
   );
-}
 
-async function schedulePushNotification() {
-  await Notifications.scheduleNotificationAsync({
-    content: {
-      title: "You've got mail! 📬",
-      body: 'Here is the notification body',
-      data: { data: 'goes here' },
-    },
-    trigger: { seconds: 2 },
-  });
-}
+  async function schedulePushNotification() {
 
-async function registerForPushNotificationsAsync() {
-  let token;
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "Playing : " + music[index].name,
+        body: ""+getPlaytime(),
+        data: { data: 'goes here' },
 
-  if (Platform.OS === 'android') {
-    await Notifications.setNotificationChannelAsync('default', {
-      name: 'default',
-      importance: Notifications.AndroidImportance.MAX,
-      vibrationPattern: [0, 250, 250, 250],
-      lightColor: '#FF231F7C',
+      },
+      trigger: { seconds: 2 },
     });
   }
-
-  if (Device.isDevice) {
-    const { status: existingStatus } = await Notifications.getPermissionsAsync();
-    let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-      const { status } = await Notifications.requestPermissionsAsync();
-      finalStatus = status;
+  
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
     }
-    if (finalStatus !== 'granted') {
-      alert('Failed to get push token for push notification!');
-      return;
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync();
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
     }
-    token = (await Notifications.getExpoPushTokenAsync()).data;
-    console.log(token);
-  } else {
-    alert('Must use physical device for Push Notifications');
+  
+    return token;
   }
 
-  return token;
 }
+
+
 
 const styles = StyleSheet.create({
   container: {

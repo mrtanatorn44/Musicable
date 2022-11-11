@@ -4,7 +4,8 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useNavigation } from '@react-navigation/native';
 import { Octicons } from '@expo/vector-icons'; 
 import { LinearGradient } from 'expo-linear-gradient';
-import * as MusicsModel from "../firestore/MusicsModel";
+// import * as MusicsModel from "../firestore/MusicsModel";
+import coreData from '../coreData.json';
 
 import { Dimensions } from 'react-native';
 const {width, height} = Dimensions.get('window');
@@ -21,6 +22,28 @@ export default function DiscoverScreen() {
   }, []);
 
   const loadPodcast = async () => {
+    var artistData = []
+    coreData.artist.forEach(art => {
+
+      if (art.podcast == true) {
+        artistData.push(art)
+        // console.log(art.name)
+      }
+    })
+
+    artistData.forEach(art => {
+      var count = 0
+      coreData.music.forEach(ms => {
+        if (ms.creator == art.name) {
+          count += 1
+        }
+      })
+      art.ep = count
+    })
+
+    setPodcastData(artistData)
+
+    return
     try {
       await MusicsModel.getPopularPodcast((res) => {
         setPodcastData(res);
@@ -31,6 +54,21 @@ export default function DiscoverScreen() {
   };
 
   const loadGenre = async () => {
+
+    var genreArr = []
+    coreData.music.forEach(ms => {
+      if (!genreArr.includes(ms.genre)) {
+        genreArr.push(ms.genre)
+      }
+    })
+    const RowData = genreArr.reduce(function (rows, key, index) {
+      return (
+        (index % 3 == 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) &&
+        rows
+      );
+    }, []);
+    setGenreData(RowData)
+    return
     try {
       await MusicsModel.getPopularGenre((res) => {
         const browseRowData = res.reduce(function (rows, key, index) {
@@ -50,7 +88,7 @@ export default function DiscoverScreen() {
     <View>
       <TouchableOpacity 
         style={styles.podcastsItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'podcast', id: 'playlist_id_podcast'})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'podcast', name: item.name})}
       >
         <Image
           style={{width: '90%', height: '60%', borderRadius: 20}}
@@ -58,7 +96,7 @@ export default function DiscoverScreen() {
         />
         <View style={{width: '90%', height: '30%'}}>
           <Text style={styles.text} numberOfLines={1} >{item.name}</Text>
-          <Text style={[styles.text, {fontSize: 18, color: 'gray'}]} numberOfLines={1}>333 ep</Text>
+          <Text style={[styles.text, {fontSize: 18, color: 'gray'}]} numberOfLines={1}>{item.ep} ep</Text>
         </View>
       </TouchableOpacity> 
     </View>
@@ -66,6 +104,7 @@ export default function DiscoverScreen() {
 
   const renderBrowse = ({ item }) => (
     <View>
+       { item[0] &&
       <TouchableOpacity 
         style={styles.browseItem} 
         onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[0]})}
@@ -77,7 +116,8 @@ export default function DiscoverScreen() {
         >
           <Text style={styles.text}>{item[0]}</Text>
         </LinearGradient>
-      </TouchableOpacity> 
+      </TouchableOpacity> }
+      { item[1] &&
       <TouchableOpacity 
         style={styles.browseItem} 
         onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[1]})}
@@ -89,7 +129,8 @@ export default function DiscoverScreen() {
         >          
           <Text style={styles.text}>{item[1]}</Text>
         </LinearGradient>
-      </TouchableOpacity> 
+      </TouchableOpacity> }
+      { item[2] &&
       <TouchableOpacity 
         style={styles.browseItem} 
         onPress={() => navigation.navigate('PlaylistScreen', {from: 'DiscoverScreen', type: 'genre', key: item[2]})}
@@ -101,7 +142,7 @@ export default function DiscoverScreen() {
         >          
           <Text style={styles.text}>{item[2]}</Text>
         </LinearGradient>
-      </TouchableOpacity> 
+      </TouchableOpacity> }
     </View>
   );
 

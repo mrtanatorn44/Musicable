@@ -81,6 +81,25 @@ export default function PlaylistScreen ({route}) {
 
   const loadMusic = async () => {
     if (route.params.type == 'genre') {
+
+      var musicArr = []
+      coreData.music.forEach(ms => {
+        if (ms.genre == route.params.key) {
+          musicArr.push(ms)
+        }
+      })
+
+      setPlaylist(playlist => ({
+        ...playlist, 
+        ...{
+          title : route.params.key,
+          liked : musicArr.length,
+          image : 'https://miro.medium.com/max/1400/1*FyAXv_iWwamsNRfSjhMzUQ.jpeg',
+          label : 'Featuring',
+          music : musicArr
+        }
+      }))
+      return
       // type, key
       // firebase.getPlaylistFromGenre(route.params.type)
 
@@ -215,6 +234,35 @@ export default function PlaylistScreen ({route}) {
       })
         
     } else if (route.params.type == 'podcast') { 
+      var musicArr = []
+      coreData.music.forEach(ms => {
+        if (ms.creator == route.params.name) {
+          musicArr.push(ms)
+        }
+      })
+      var artData = {}
+      coreData.artist.forEach(art => {
+        if (art.name == route.params.name) {
+          artData.name = art.name
+          artData.follower = art.follower
+          artData.image = art.image
+          return
+        }
+      })
+
+      setPlaylist(playlist => ({
+        ...playlist, 
+        ...{
+          title : artData.name,
+          liked : artData.follower,
+          image : artData.image,
+          label : 'Episode',
+          music : musicArr
+        }
+      }))
+
+      
+      return
       // get Podcast data
       await MusicsModel.getPodcast(route.params.id, (podcastData) => {
         setPlaylist(playlist => ({
@@ -354,9 +402,10 @@ export default function PlaylistScreen ({route}) {
             {/* Name */}
             <Text style={{fontSize: 50, fontWeight: 'bold',color: 'white'}} numberOfLines={1}>{playlist.title}</Text>
             {/* Liked */}
+            { route.params.type != 'genre' &&
             <Text style={{fontSize: 18, color: 'lightgray'}}><Octicons name="heart-fill" size={18} color="lightgray" />
               { ' ' + getNumber(playlist.liked)} {route.params.type == 'artist' ? 'Followers' : 'likes'}
-            </Text>
+            </Text>}
           </View>
         </View>
 
