@@ -119,7 +119,7 @@ export default function MainScreen() {
     <View>
       <TouchableOpacity
         style={styles.userPlaylistItem}
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', id: 'playlist_id'})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', name: item[0].name})}
       >
         <Image
           style={{width: '40%', height: '100%'}}
@@ -131,7 +131,7 @@ export default function MainScreen() {
       </TouchableOpacity> 
       <TouchableOpacity 
         style={styles.userPlaylistItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', id: 'playlist_id'})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', name: item[1].name})}
       >
         <Image
           style={{width: '40%', height: '100%'}}
@@ -147,7 +147,7 @@ export default function MainScreen() {
     <View>
       <TouchableOpacity 
         style={styles.officialPlaylistItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', id: 'playlist_id'})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'playlist', name: item.name})}
       >
         <Image
           style={{width: '90%', height: '60%', borderRadius: 20}}
@@ -164,7 +164,7 @@ export default function MainScreen() {
     <View>
       <TouchableOpacity 
         style={styles.suggestedArtistsItem} 
-        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'artist', id: item.id})}
+        onPress={() => navigation.navigate('PlaylistScreen', {from: 'HomeScreen', type: 'artist', name: item.name})}
       >
         <Image
           style={{aspectRatio: 1, height: '60%', borderRadius: 1000}}

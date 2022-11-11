@@ -96,6 +96,42 @@ export default function PlaylistScreen ({route}) {
         }
       }))
     } else if (route.params.type == 'userliked') { 
+
+      var data = []
+      coreData.playlist.forEach((pl) => {
+        if (pl.name == route.params.name) {
+
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              title : pl.name,
+              liked : pl.view,
+              image : pl.image,
+              label : 'Featuring',
+            }
+          }))
+
+          // get music
+          var musicArr = []
+          pl.music.forEach((musicName) => {
+            // console.log(musicName)
+            var result = coreData.music.filter(obj => {return obj.name === musicName})
+            console.log(result[0])
+            musicArr.push(result[0])
+          })
+          
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              music : musicArr 
+            }
+          }))
+          
+          return
+        }
+      })
+
+      return
       // type, id
       // firebase.getPlaylistFromUserLiked(route.params.id)
 
@@ -111,32 +147,72 @@ export default function PlaylistScreen ({route}) {
         }
       }))
     } else if (route.params.type == 'artist') { 
-        
-        return
-        // get Artist data
-        await MusicsModel.getArtist(route.params.id, (artistData) => {
+
+      const randomBet = (min, max) => { // min and max included 
+        return Math.floor(Math.random() * (max - min + 1) + min)
+      }
+
+      var start = randomBet(0, 200);
+      var around = randomBet(6,19);
+      // console.log(start, around)
+
+      coreData.artist.forEach((artist) => {
+        if (artist.name == route.params.name) {
           setPlaylist(playlist => ({
             ...playlist, 
             ...{
-              title : artistData.name,
-              liked : artistData.follower,
-              image : artistData.image,
+              title : artist.name,
+              liked : artist.follower,
+              image : artist.image,
               label : 'Popular Release',
             }
           }))
-          // get Music data
-          MusicsModel.getMusicFromArtist(route.params.id, (musicData) => {
-            musicData.forEach(element => {
-              element.artist = artistData.name
-            });
-            setPlaylist(playlist => ({
-              ...playlist, 
-              ...{
-                music : musicData 
-              }
-            }))
+
+          // get music
+          var musicArr = []
+          coreData.music.forEach((ms, index) => {
+            // console.log(index)
+            if (index > start && index < start+around) {
+              musicArr.push(ms)
+            }
           })
+          
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              music : musicArr 
+            }
+          }))
+          
+          return
+        }
+      })
+      // setPlaylistOfficialData(data)
+      return
+      // get Artist data
+      await MusicsModel.getArtist(route.params.id, (artistData) => {
+        setPlaylist(playlist => ({
+          ...playlist, 
+          ...{
+            title : artistData.name,
+            liked : artistData.follower,
+            image : artistData.image,
+            label : 'Popular Release',
+          }
+        }))
+        // get Music data
+        MusicsModel.getMusicFromArtist(route.params.id, (musicData) => {
+          musicData.forEach(element => {
+            element.artist = artistData.name
+          });
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              music : musicData 
+            }
+          }))
         })
+      })
         
     } else if (route.params.type == 'podcast') { 
       // get Podcast data
@@ -164,6 +240,45 @@ export default function PlaylistScreen ({route}) {
         })
       })
     } else if (route.params.type == 'playlist') { 
+      console.log(route.params.name)
+
+      var data = []
+      coreData.playlist.forEach((pl) => {
+
+        if (pl.name == route.params.name) {
+          console.log(pl.name)
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              title : pl.name,
+              liked : pl.view,
+              image : pl.image,
+              label : 'Featuring',
+            }
+          }))
+
+          // get music
+          var musicArr = []
+          pl.music.forEach((musicName) => {
+            // console.log(musicName)
+            var result = coreData.music.filter(obj => {return obj.name === musicName})
+            // console.log(result[0])
+            musicArr.push(result[0])
+          })
+          
+          setPlaylist(playlist => ({
+            ...playlist, 
+            ...{
+              music : musicArr 
+            }
+          }))
+          
+          return
+        }
+      })
+          
+
+      return
       // type, playlist_id
       // firebase.getPlaylistFromID(route.params.id)
       console.log(route.params.id)
@@ -191,7 +306,7 @@ export default function PlaylistScreen ({route}) {
     navigation.navigate('MusicScreen', 
       {
         from      : 'PlaylistScreen', 
-        from_id   : route.params.id,
+        from_name   : route.name,
         from_type : route.params.type,
         music     : playlist.music,
         music_idx : music_idx,
@@ -209,14 +324,14 @@ export default function PlaylistScreen ({route}) {
         />
         <View style={{width: '70%', height: '100%', justifyContent: 'center', marginHorizontal: '3%'}}>
           <Text style={{fontSize: 24, color: 'white', fontWeight: 'bold'}} numberOfLines={1} >{item.name}</Text>
-          <Text style={{fontSize: 16, color: 'white'}} numberOfLines={1} >{item.artist}</Text>
+          <Text style={{fontSize: 16, color: 'white'}} numberOfLines={1} >{getNumber(item.like)} liked</Text>
         </View>
       </TouchableOpacity> 
-      <TouchableOpacity style={{width: '10%', justifyContent: 'center', alignItems: 'center'}}>
+      {/* <TouchableOpacity style={{width: '10%', justifyContent: 'center', alignItems: 'center'}}>
         {(item.liked)?
         <Octicons name="heart-fill" size={32} color="#1ED760" />:
         <Octicons name="heart" size={32} color="lightgray" />}
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 

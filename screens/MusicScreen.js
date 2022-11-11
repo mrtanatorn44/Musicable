@@ -19,7 +19,7 @@ export default function MusicScreen({route}) {
   const [title, setTitle] = useState(route.params.title ? route.params.title : '')
   const [music, setMusic] = useState(route.params.music)
   const [index, setIndex] = useState(route.params.music_idx)
-  
+  const [isLoop, setIsLoop] = useState(false)
   const video               = useRef(null);
   const [status, setStatus] = useState({});
   const [originStatus, setOriginStatus] = useState(null);
@@ -44,6 +44,13 @@ export default function MusicScreen({route}) {
     // console.log(status.positionMillis / status.durationMillis)
     // console.log(status.durationMillis)
     if ( video != null && status.positionMillis != null && status.durationMillis != null ) {
+      if (status.positionMillis == status.durationMillis) {
+        if (isLoop) {
+          onReplay()
+        } else {
+          onForward()
+        }
+      }
       return ( status.positionMillis / status.durationMillis );
     }
     return 0;
@@ -56,21 +63,36 @@ export default function MusicScreen({route}) {
     }
   }
 
-  const onBackward = () => {
-    if (trackIndex !== 0) {
+  const onReplay = async () => {
+    await video.current.setStatusAsync({positionMillis : 0})
+  }
+  const onBackward = async () => {
+    if (index !== 0) {
+      await video.current.unloadAsync();
       setIndex(index-1)
+      await video.current.setStatusAsync(originStatus)
+      await video.current.playAsync()
     } else {
-      setIndex(music.length()-1)
+      await video.current.unloadAsync();
+      setIndex(music.length-1)
+      await video.current.setStatusAsync(originStatus)
+      await video.current.playAsync()
     }
   }
-  const onForward = () => {
-    if (trackIndex !== music.length()-1) {
+  const onForward = async () => {
+    if (index !== music.length-1) {
+      await video.current.unloadAsync();
       setIndex(index+1)
+      await video.current.setStatusAsync(originStatus)
+      await video.current.playAsync()
     } else {
+      await video.current.unloadAsync();
       setIndex(0)
+      await video.current.setStatusAsync(originStatus)
+      await video.current.playAsync()
     }
   }
-  const onShuffle = () => {
+  const onShuffle = async () => {
     const shuffle = (array) => {
       let currentIndex = array.length,  randomIndex;
       while (currentIndex != 0) {
@@ -81,12 +103,13 @@ export default function MusicScreen({route}) {
       }
       return array;
     }
+
+    await video.current.unloadAsync();
     var newMusicList = shuffle(music)
     setMusic(newMusicList)
-    video.current.pauseAsync()
-    video.current.setStatusAsync(originStatus)
-    video.current.setStatusAsync({source: { uri: music[index].uri }})
-    video.current.playAsync()
+    await video.current.setStatusAsync(originStatus)
+    await video.current.playAsync()
+
     let toast = Toast.show('Shuffled playlist', {duration: Toast.durations.SHORT, backgroundColor: 'gray'});
   }
   // console.log(route.params.music)
@@ -100,15 +123,19 @@ export default function MusicScreen({route}) {
   //   }
   // }))
   
-  const onBackButton = () => {
+  const onBackButton =  () => {
     const params = route.params
     navigation.navigate( params.from, {
       from  : params.from_parent, 
       type  : params.from_type, 
-      id    :  params.from_id
+      name    :  params.from_name
     })
   }
 
+  const onStatusUpdate = (vidStatus) => {
+    setStatus(vidStatus)
+   
+  }
   // Utility Function
   const getPlaytime = () => {
     const getTimeFormat = (time) => {
@@ -120,6 +147,7 @@ export default function MusicScreen({route}) {
       return getTimeFormat(status.positionMillis/1000) + ' / ' + getTimeFormat(status.durationMillis/1000);
     }
   }
+
   return (
     <SafeAreaView style={styles.container}>
       {/* Loading Modal */}
@@ -145,7 +173,7 @@ export default function MusicScreen({route}) {
           <Image style={{height: '100%', width: '100%'}} source={{ uri: music[index].image}}/>
           <Video
             ref={video}
-            onPlaybackStatusUpdate={status => setStatus(() => status)}
+            onPlaybackStatusUpdate={status => onStatusUpdate(status)}
             onLoadStart={()=> console.log(`ON LOAD START`)}
             onLoad={(status) => {console.log(`ON LOAD : ${JSON.stringify(status)}`); if (originStatus == null) {setOriginStatus(status)}}}
             onError={(error) => console.log(`ON ERROR : ${error}`)}
@@ -173,7 +201,7 @@ export default function MusicScreen({route}) {
             />
           </View>
           <View style={{justifyContent: 'space-between', flexDirection: 'row'}}>
-            {/* <Text style={{fontSize: 18, color: 'white'}}>{this.state.isBuffering ? BUFFERING_STRING : ""}</Text> */}
+            <Text style={{fontSize: 18, color: 'white'}}>{status.isBuffering ? BUFFERING_STRING : ""}</Text>
             <Text style={{fontSize: 18, color: 'white'}}>{getPlaytime()}</Text>
           </View>
         </View>
@@ -197,11 +225,11 @@ export default function MusicScreen({route}) {
           <TouchableOpacity onPress={() => onForward()} >
             <Ionicons name="play-skip-forward"  size={66} color="white" />
           </TouchableOpacity>
-          {/* <TouchableOpacity onPress={() => this._onLoopPressed()} >
-            { (this.state.loopingType)?
+          <TouchableOpacity onPress={() => setIsLoop(!isLoop)} >
+            { (isLoop)?
               <Ionicons name="infinite" size={66} color="white" />:
               <Ionicons name="infinite" size={66} color="gray" />}
-          </TouchableOpacity> */}
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
